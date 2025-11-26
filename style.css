@@ -1,0 +1,280 @@
+/* Basic reset */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: #f5f5f7;
+  color: #1f2933;
+  line-height: 1.5;
+}
+
+/* Top bar */
+.top-bar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1.5rem;
+  background: #111827;
+  color: #f9fafb;
+}
+
+.logo {
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.nav a {
+  margin-left: 1rem;
+  color: #e5e7eb;
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+.nav a:hover {
+  color: #ffffff;
+  text-decoration: underline;
+}
+
+/* Hero section */
+.hero {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 3rem 1.5rem;
+  gap: 2rem;
+  background: white;
+}
+
+.hero-text {
+  flex: 1 1 250px;
+}
+
+.hero-text h1 {
+  font-size: 2rem;
+  margin-bottom: 0.75rem;
+}
+
+.hero-text p {
+  max-width: 32rem;
+  margin-bottom: 1.25rem;
+  font-size: 0.98rem;
+}
+
+.hero-side {
+  flex: 1 1 220px;
+}
+
+.hero-list {
+  list-style: none;
+}
+
+.hero-list li {
+  margin-bottom: 0.5rem;
+}
+
+/* Buttons */
+.primary-btn,
+.secondary-btn,
+.link-btn {
+  padding: 0.5rem 1rem;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  font-size: 0.9rem;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.primary-btn {
+  background: #2563eb;
+  color: #ffffff;
+}
+
+.primary-btn:hover {
+  background: #1d4ed8;
+}
+
+.secondary-btn {
+  background: #e5e7eb;
+  color: #111827;
+}
+
+.secondary-btn:hover {
+  background: #d1d5db;
+}
+
+.link-btn {
+  background: transparent;
+  color: #2563eb;
+}
+
+/* Cards section */
+.cards-section {
+  padding: 2rem 1.5rem;
+}
+
+.cards-section h2 {
+  margin-bottom: 1rem;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 1rem;
+}
+
+.card {
+  background: white;
+  padding: 1rem;
+  border-radius: 0.8rem;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.06);
+}
+
+.card h3 {
+  margin-bottom: 0.5rem;
+}
+
+/* Content sections */
+.content-section {
+  padding: 2rem 1.5rem;
+}
+
+.content-section.alt-bg {
+  background: #f3f4f6;
+}
+
+.content-section h2 {
+  margin-bottom: 0.75rem;
+}
+
+.section-intro {
+  margin-bottom: 1.25rem;
+  font-size: 0.95rem;
+}
+
+.topics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+}
+
+.topic {
+  background: white;
+  padding: 1rem;
+  border-radius: 0.8rem;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
+}
+
+.topic h3 {
+  margin-bottom: 0.5rem;
+}
+
+.topic ul {
+  padding-left: 1rem;
+  font-size: 0.9rem;
+}
+
+.topic li {
+  list-style: disc;
+  margin-bottom: 0.25rem;
+}
+
+/* Quiz section */
+.quiz-section {
+  padding: 2rem 1.5rem 3rem;
+}
+
+.quiz-section h2 {
+  margin-bottom: 0.75rem;
+}
+
+.quiz-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.quiz-controls label {
+  font-size: 0.9rem;
+}
+
+.quiz-controls select {
+  padding: 0.35rem 0.6rem;
+  border-radius: 999px;
+  border: 1px solid #d1d5db;
+  font-size: 0.9rem;
+}
+
+/* Quiz card */
+.quiz-card {
+  background: white;
+  padding: 1rem;
+  border-radius: 0.8rem;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.06);
+  max-width: 600px;
+}
+
+.question-text {
+  margin-bottom: 0.75rem;
+  font-weight: 600;
+}
+
+.options {
+  margin-bottom: 0.75rem;
+}
+
+.option-item {
+  margin-bottom: 0.4rem;
+  font-size: 0.92rem;
+}
+
+.feedback {
+  margin-top: 0.75rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.feedback.correct {
+  color: #047857;
+}
+
+.feedback.incorrect {
+  color: #b91c1c;
+}
+
+/* Footer */
+.footer {
+  text-align: center;
+  padding: 1rem;
+  font-size: 0.8rem;
+  color: #6b7280;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .hero {
+    padding-top: 2rem;
+  }
+
+  .top-bar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .nav {
+    margin-top: 0.5rem;
+  }
+
+  .nav a {
+    margin-left: 0;
+    margin-right: 0.75rem;
+  }
+}
