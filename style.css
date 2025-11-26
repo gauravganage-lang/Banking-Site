@@ -1,21 +1,41 @@
-/* ---------- JAIIB Syllabus Layout ---------- */
+/* ---------- JAIIB subject tabs & syllabus ---------- */
+.subject-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.8rem;
+}
+
+.subject-tab {
+  padding: 0.4rem 0.8rem;
+  border-radius: 999px;
+  border: 1px solid #d1d5db;
+  background: #f9fafb;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.subject-tab.active {
+  background: #2563eb;
+  color: #ffffff;
+  border-color: #2563eb;
+}
+
+/* layout for paper cards */
 .syllabus-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 1rem;
-  margin-top: 0.5rem;
+  display: block; /* we show one card at a time */
 }
 
 .paper-card {
+  display: none;
   background: #f9fafb;
   border-radius: 0.75rem;
-  padding: 0.8rem 0.9rem;
-  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.06);
+  padding: 0.9rem;
+  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.08);
 }
 
-.paper-card h3 {
-  margin-bottom: 0.5rem;
-  font-size: 1rem;
+.paper-card.active {
+  display: block;
 }
 
 .module-block {
