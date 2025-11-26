@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Student Dashboard | Banking Study Portal</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style.css" />
+  <script defer src="script.js"></script>
+</head>
+<body data-role-required="student">
+  <header class="top-bar">
+    <div class="top-left">
+      <h2>Student Dashboard</h2>
+      <span id="studentWelcome" class="welcome-text"></span>
+    </div>
+    <nav class="nav">
+      <button class="secondary-btn nav-btn" data-student-section="notes">Notes</button>
+      <button class="secondary-btn nav-btn" data-student-section="quiz">Quizzes</button>
+      <button class="secondary-btn nav-btn" data-student-section="assignments">Assignments</button>
+      <button id="logoutBtn" class="secondary-btn" type="button">Logout</button>
+    </nav>
+  </header>
+
+  <main class="main-content student-main">
+    <!-- NOTES -->
+    <section id="student-notes" class="student-section active">
+      <h2>Study Notes</h2>
+      <p class="section-note">Select a paper to view available notes.</p>
+
+      <div class="subject-tabs">
+        <button class="subject-tab active" data-paper="paper1">Paper 1</button>
+        <button class="subject-tab" data-paper="paper2">Paper 2</button>
+        <button class="subject-tab" data-paper="paper3">Paper 3</button>
+        <button class="subject-tab" data-paper="paper4">Paper 4</button>
+      </div>
+
+      <div id="studentNotesList" class="notes-list"></div>
+    </section>
+
+    <!-- QUIZ -->
+    <section id="student-quiz" class="student-section">
+      <h2>Practice Quizzes</h2>
+      <p class="section-note">Choose a paper and attempt questions. Your submissions are tracked for analytics.</p>
+
+      <div class="subject-tabs">
+        <button class="subject-tab active" data-paper="paper1">Paper 1</button>
+        <button class="subject-tab" data-paper="paper2">Paper 2</button>
+        <button class="subject-tab" data-paper="paper3">Paper 3</button>
+        <button class="subject-tab" data-paper="paper4">Paper 4</button>
+      </div>
+
+      <div id="quizPanel" class="quiz-card">
+        <div id="quizQuestionText" class="quiz-question"></div>
+        <div id="quizOptions" class="quiz-options"></div>
+
+        <div class="quiz-buttons-row">
+          <button id="quizCheckBtn" type="button" class="primary-btn quiz-check-btn">
+            Check Answer
+          </button>
+          <button id="quizNextBtn" type="button" class="secondary-btn quiz-next-btn">
+            Next Question
+          </button>
+        </div>
+
+        <div id="quizFeedback" class="quiz-feedback"></div>
+      </div>
+    </section>
+
+    <!-- ASSIGNMENTS -->
+    <section id="student-assignments" class="student-section">
+      <h2>Assignments</h2>
+      <p class="section-note">View assignments and mark them as submitted.</p>
+
+      <div id="assignmentList" class="assignments-list"></div>
+    </section>
+  </main>
+</body>
+</html>
