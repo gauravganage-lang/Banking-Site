@@ -2,62 +2,194 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Admin Panel | Banking Study Portal</title>
+  <title>Admin Dashboard | Banking Study Portal</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="style.css" />
   <script defer src="script.js"></script>
 </head>
-<body data-require-role="admin">
+<body data-role-required="admin">
   <header class="top-bar">
     <div class="top-left">
-      <h2>Admin Panel</h2>
-      <span class="welcome-text">Logged in as Admin</span>
+      <h2>Admin Dashboard</h2>
+      <span id="adminWelcome" class="welcome-text"></span>
     </div>
     <nav class="nav">
+      <button class="secondary-btn nav-btn" data-section="users">Users</button>
+      <button class="secondary-btn nav-btn" data-section="content">Content</button>
+      <button class="secondary-btn nav-btn" data-section="analytics">Analytics</button>
       <button id="logoutBtn" class="secondary-btn" type="button">Logout</button>
     </nav>
   </header>
 
-  <main class="main-content">
-    <section class="admin-section">
-      <h1>User Management</h1>
-      <p>Create and delete user accounts for the study portal.</p>
+  <main class="main-content admin-main">
+    <!-- USERS SECTION -->
+    <section id="admin-users" class="admin-section active">
+      <h2>User Management</h2>
+      <p class="section-note">Create, edit and delete student users. Admin account is fixed in code.</p>
 
       <div class="admin-card">
-        <h3>Add New User</h3>
-        <label for="newUserEmail">Email</label>
-        <input
-          type="email"
-          id="newUserEmail"
-          placeholder="officer@bank.com"
-        />
+        <h3>Add / Edit Student User</h3>
+        <form id="userForm" class="admin-form">
+          <input type="hidden" id="userId" />
+          <label>Email</label>
+          <input id="userEmail" type="email" placeholder="student@bank.com" required />
+          <label>Password</label>
+          <input id="userPassword" type="text" placeholder="Password" required />
 
-        <label for="newUserPassword">Password</label>
-        <input
-          type="text"
-          id="newUserPassword"
-          placeholder="Set a password"
-        />
-
-        <button id="addUserBtn" class="primary-btn admin-add-btn" type="button">
-          Add User
-        </button>
+          <button type="submit" class="primary-btn" id="userSaveBtn">Save User</button>
+          <button type="button" class="secondary-btn" id="userResetBtn">Clear</button>
+        </form>
       </div>
 
       <div class="admin-card">
-        <h3>Existing Users</h3>
-        <table class="user-table">
+        <h3>Existing Students</h3>
+        <table class="data-table">
           <thead>
             <tr>
               <th>Email</th>
-              <th>Password</th>
               <th>Actions</th>
             </tr>
           </thead>
-          <tbody id="userTableBody">
-            <!-- Filled by JS -->
-          </tbody>
+          <tbody id="userTableBody"></tbody>
         </table>
+      </div>
+    </section>
+
+    <!-- CONTENT SECTION -->
+    <section id="admin-content" class="admin-section">
+      <h2>Content Management</h2>
+      <p class="section-note">Manage notes, quizzes and assignments for students.</p>
+
+      <!-- NOTES -->
+      <div class="admin-card">
+        <h3>Study Notes</h3>
+        <form id="noteForm" class="admin-form">
+          <input type="hidden" id="noteId" />
+          <label>Paper</label>
+          <select id="notePaper">
+            <option value="paper1">Paper 1 – IE & IFS</option>
+            <option value="paper2">Paper 2 – PPB</option>
+            <option value="paper3">Paper 3 – AFM</option>
+            <option value="paper4">Paper 4 – RBWM</option>
+          </select>
+          <label>Title</label>
+          <input id="noteTitle" type="text" placeholder="Topic title" required />
+          <label>Content</label>
+          <textarea id="noteContent" rows="3" placeholder="Short bullet-style notes"></textarea>
+
+          <button type="submit" class="primary-btn">Save Note</button>
+          <button type="button" class="secondary-btn" id="noteResetBtn">Clear</button>
+        </form>
+
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Paper</th>
+              <th>Title</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="noteTableBody"></tbody>
+        </table>
+      </div>
+
+      <!-- QUIZZES -->
+      <div class="admin-card">
+        <h3>Quizzes (MCQs)</h3>
+        <form id="quizForm" class="admin-form">
+          <input type="hidden" id="quizId" />
+          <label>Paper</label>
+          <select id="quizPaper">
+            <option value="paper1">Paper 1 – IE & IFS</option>
+            <option value="paper2">Paper 2 – PPB</option>
+            <option value="paper3">Paper 3 – AFM</option>
+            <option value="paper4">Paper 4 – RBWM</option>
+          </select>
+
+          <label>Question</label>
+          <textarea id="quizQuestion" rows="2" required></textarea>
+
+          <label>Options (one per line)</label>
+          <textarea id="quizOptions" rows="3" placeholder="Option 1&#10;Option 2&#10;Option 3&#10;Option 4"></textarea>
+
+          <label>Correct Option Index (0-based)</label>
+          <input id="quizAnswerIndex" type="number" min="0" value="0" />
+
+          <button type="submit" class="primary-btn">Save Question</button>
+          <button type="button" class="secondary-btn" id="quizResetBtn">Clear</button>
+        </form>
+
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Paper</th>
+              <th>Question</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="quizTableBody"></tbody>
+        </table>
+      </div>
+
+      <!-- ASSIGNMENTS -->
+      <div class="admin-card">
+        <h3>Assignments</h3>
+        <form id="assignmentForm" class="admin-form">
+          <input type="hidden" id="assignmentId" />
+          <label>Title</label>
+          <input id="assignmentTitle" type="text" placeholder="Assignment title" required />
+          <label>Description</label>
+          <textarea id="assignmentDescription" rows="3"></textarea>
+          <label>Due Date</label>
+          <input id="assignmentDueDate" type="date" />
+
+          <button type="submit" class="primary-btn">Save Assignment</button>
+          <button type="button" class="secondary-btn" id="assignmentResetBtn">Clear</button>
+        </form>
+
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Due Date</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="assignmentTableBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ANALYTICS SECTION -->
+    <section id="admin-analytics" class="admin-section">
+      <h2>Analytics</h2>
+      <p class="section-note">Basic overview of platform usage (from localStorage).</p>
+
+      <div class="analytics-grid">
+        <div class="analytics-card">
+          <h3>Total Users</h3>
+          <p id="statTotalUsers">0</p>
+        </div>
+        <div class="analytics-card">
+          <h3>Students</h3>
+          <p id="statStudents">0</p>
+        </div>
+        <div class="analytics-card">
+          <h3>Notes</h3>
+          <p id="statNotes">0</p>
+        </div>
+        <div class="analytics-card">
+          <h3>Quiz Questions</h3>
+          <p id="statQuizzes">0</p>
+        </div>
+        <div class="analytics-card">
+          <h3>Assignments</h3>
+          <p id="statAssignments">0</p>
+        </div>
+        <div class="analytics-card full">
+          <h3>Quiz Submissions (total)</h3>
+          <p id="statSubmissions">0</p>
+        </div>
       </div>
     </section>
   </main>
