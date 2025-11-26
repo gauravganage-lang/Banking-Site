@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>User Dashboard | Banking Study Portal</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style.css" />
+  <script defer src="script.js"></script>
+</head>
+<body data-require-role="user">
+  <header class="top-bar">
+    <div class="top-left">
+      <h2>Banking Study Portal</h2>
+      <span id="welcomeUser" class="welcome-text"></span>
+    </div>
+    <nav class="nav">
+      <a href="#jaiib">JAIIB</a>
+      <a href="#caiib">CAIIB</a>
+      <a href="#internal">Internal Exams</a>
+      <button id="logoutBtn" class="secondary-btn" type="button">Logout</button>
+    </nav>
+  </header>
+
+  <main class="main-content">
+    <section>
+      <h1>Welcome to your Study Dashboard</h1>
+      <p>Access JAIIB, CAIIB and internal promotion exam notes here.</p>
+    </section>
+
+    <section id="jaiib" class="card-section">
+      <h2>JAIIB</h2>
+      <ul>
+        <li>Principles & Practices of Banking</li>
+        <li>Accounting & Finance for Bankers</li>
+        <li>Legal & Regulatory Aspects of Banking</li>
+      </ul>
+    </section>
+
+    <section id="caiib" class="card-section">
+      <h2>CAIIB</h2>
+      <ul>
+        <li>Advanced Bank Management</li>
+        <li>Bank Financial Management</li>
+        <li>Elective Papers (Retail, Rural, IT, etc.)</li>
+      </ul>
+    </section>
+
+    <section id="internal" class="card-section">
+      <h2>Internal Promotion Exams</h2>
+      <ul>
+        <li>Credit & Advances</li>
+        <li>NPA Management</li>
+        <li>Priority Sector Lending & Government Schemes</li>
+      </ul>
+    </section>
+  </main>
+</body>
+</html>
