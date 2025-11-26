@@ -1,159 +1,195 @@
-//-------------------------------------------------------------
-// 0. DEFAULT ADMIN LOGIN
-//-------------------------------------------------------------
-const adminCredentials = {
-  email: "admin@bank.com",
-  password: "admin123"
-};
+// =============== BASIC CONSTANTS ===============
 
-//-------------------------------------------------------------
-// 1. LOAD USERS FROM STORAGE OR CREATE EMPTY LIST
-//-------------------------------------------------------------
-let userList = JSON.parse(localStorage.getItem("userList")) || [];
+// Default admin credentials
+const ADMIN_EMAIL = "admin@bank.com";
+const ADMIN_PASSWORD = "admin123";
 
-// SAVE USERS
-function saveUsers() {
-  localStorage.setItem("userList", JSON.stringify(userList));
+// Load users from localStorage or empty list
+let userList = [];
+try {
+  const stored = localStorage.getItem("portalUsers");
+  userList = stored ? JSON.parse(stored) : [];
+} catch (e) {
+  userList = [];
 }
 
-//-------------------------------------------------------------
-// 2. LOGIN HANDLER
-//-------------------------------------------------------------
-function handleLogin(e) {
-  e.preventDefault();
+// Save users to localStorage
+function saveUsers() {
+  localStorage.setItem("portalUsers", JSON.stringify(userList));
+}
 
-  const email = document.getElementById("email").value.trim();
-  const password = document.getElementById("password").value.trim();
+// =============== AUTH / LOGIN LOGIC ===============
+
+function handleLogin(event) {
+  event.preventDefault();
+
+  const emailInput = document.getElementById("email");
+  const passwordInput = document.getElementById("password");
   const errorBox = document.getElementById("loginError");
 
-  // ADMIN LOGIN
-  if (email === adminCredentials.email && password === adminCredentials.password) {
-    localStorage.setItem("loggedInUser", "ADMIN");
+  const email = emailInput.value.trim().toLowerCase();
+  const password = passwordInput.value.trim();
+
+  // Admin login
+  if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
+    localStorage.setItem("loggedInRole", "admin");
+    localStorage.setItem("loggedInEmail", ADMIN_EMAIL);
     window.location.href = "admin.html";
     return;
   }
 
-  // NORMAL USER LOGIN
+  // Normal user login
   const user = userList.find(
-    (u) => u.email === email && u.password === password
+    (u) => u.email.toLowerCase() === email && u.password === password
   );
 
   if (!user) {
-    errorBox.textContent = "Invalid email or password!";
+    errorBox.textContent = "Invalid email or password.";
     return;
   }
 
-  localStorage.setItem("loggedInUser", email);
+  localStorage.setItem("loggedInRole", "user");
+  localStorage.setItem("loggedInEmail", user.email);
+  window.location.href = "dashboard.html";
+}
+
+function logout() {
+  localStorage.removeItem("loggedInRole");
+  localStorage.removeItem("loggedInEmail");
   window.location.href = "index.html";
 }
 
-//-------------------------------------------------------------
-// 3. PROTECT USER PAGES
-//-------------------------------------------------------------
-function protectUserPages() {
-  const requiredUser = document.body.getAttribute("data-protected");
+// =============== PAGE PROTECTION ===============
 
-  if (!requiredUser) return;
+function enforceProtection() {
+  const body = document.body;
+  if (!body) return;
 
-  const logged = localStorage.getItem("loggedInUser");
+  const requiredRole = body.getAttribute("data-require-role");
+  if (!requiredRole) return; // Public page (login)
 
-  if (!logged || logged === "ADMIN") {
-    window.location.href = "login.html";
+  const loggedRole = localStorage.getItem("loggedInRole");
+  const loggedEmail = localStorage.getItem("loggedInEmail");
+
+  if (!loggedRole || loggedRole !== requiredRole) {
+    // Not logged in or wrong role
+    window.location.href = "index.html";
+    return;
+  }
+
+  // Optional: show logged-in email on user dashboard
+  if (requiredRole === "user") {
+    const welcomeSpan = document.getElementById("welcomeUser");
+    if (welcomeSpan && loggedEmail) {
+      welcomeSpan.textContent = `Logged in as ${loggedEmail}`;
+    }
   }
 }
 
-//-------------------------------------------------------------
-// 4. PROTECT ADMIN PAGE
-//-------------------------------------------------------------
-function protectAdminPages() {
-  const isAdminPage = document.body.getAttribute("data-admin");
+// =============== ADMIN: USER MANAGEMENT ===============
 
-  if (!isAdminPage) return;
-
-  const logged = localStorage.getItem("loggedInUser");
-
-  if (logged !== "ADMIN") {
-    window.location.href = "login.html";
-  }
-}
-
-//-------------------------------------------------------------
-// 5. LOGOUT
-//-------------------------------------------------------------
-function logout() {
-  localStorage.removeItem("loggedInUser");
-  window.location.href = "login.html";
-}
-
-//-------------------------------------------------------------
-// 6. ADMIN PANEL — ADD USER
-//-------------------------------------------------------------
 function addUser() {
-  const email = document.getElementById("newUserEmail").value.trim();
-  const password = document.getElementById("newUserPassword").value.trim();
+  const emailInput = document.getElementById("newUserEmail");
+  const passwordInput = document.getElementById("newUserPassword");
+  if (!emailInput || !passwordInput) return;
+
+  const email = emailInput.value.trim();
+  const password = passwordInput.value.trim();
 
   if (!email || !password) {
-    alert("Enter email and password!");
+    alert("Please enter both email and password.");
+    return;
+  }
+
+  if (email.toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
+    alert("This email is reserved for admin.");
     return;
   }
 
   // Check duplicate
-  if (userList.some((u) => u.email === email)) {
-    alert("User already exists!");
+  if (userList.some((u) => u.email.toLowerCase() === email.toLowerCase())) {
+    alert("User already exists.");
     return;
   }
 
   userList.push({ email, password });
   saveUsers();
+  emailInput.value = "";
+  passwordInput.value = "";
   loadUserTable();
-
-  document.getElementById("newUserEmail").value = "";
-  document.getElementById("newUserPassword").value = "";
+  alert("User added successfully.");
 }
 
-//-------------------------------------------------------------
-// 7. ADMIN PANEL — DELETE USER
-//-------------------------------------------------------------
 function deleteUser(email) {
-  userList = userList.filter((u) => u.email !== email);
+  if (!confirm(`Delete user ${email}?`)) return;
+  userList = userList.filter(
+    (u) => u.email.toLowerCase() !== email.toLowerCase()
+  );
   saveUsers();
   loadUserTable();
 }
 
-//-------------------------------------------------------------
-// 8. LOAD USER TABLE IN ADMIN PANEL
-//-------------------------------------------------------------
 function loadUserTable() {
-  const tableBody = document.querySelector("#userTable tbody");
+  const tableBody = document.getElementById("userTableBody");
   if (!tableBody) return;
 
   tableBody.innerHTML = "";
 
+  if (userList.length === 0) {
+    const row = document.createElement("tr");
+    const cell = document.createElement("td");
+    cell.colSpan = 3;
+    cell.textContent = "No users found. Add one above.";
+    tableBody.appendChild(row);
+    row.appendChild(cell);
+    return;
+  }
+
   userList.forEach((u) => {
     const row = document.createElement("tr");
-    row.innerHTML = `
-      <td>${u.email}</td>
-      <td>${u.password}</td>
-      <td><button onclick="deleteUser('${u.email}')">Delete</button></td>
-    `;
+
+    const emailCell = document.createElement("td");
+    emailCell.textContent = u.email;
+
+    const passCell = document.createElement("td");
+    passCell.textContent = u.password;
+
+    const actionCell = document.createElement("td");
+    const delBtn = document.createElement("button");
+    delBtn.textContent = "Delete";
+    delBtn.addEventListener("click", () => deleteUser(u.email));
+    actionCell.appendChild(delBtn);
+
+    row.appendChild(emailCell);
+    row.appendChild(passCell);
+    row.appendChild(actionCell);
+
     tableBody.appendChild(row);
   });
 }
 
-//-------------------------------------------------------------
-// 9. INIT ON PAGE LOAD
-//-------------------------------------------------------------
+// =============== INITIALIZE ON PAGE LOAD ===============
+
 document.addEventListener("DOMContentLoaded", () => {
+  // Protect pages (dashboard & admin)
+  enforceProtection();
+
+  // Login form on index.html
   const loginForm = document.getElementById("loginForm");
-  if (loginForm) loginForm.addEventListener("submit", handleLogin);
+  if (loginForm) {
+    loginForm.addEventListener("submit", handleLogin);
+  }
 
+  // Logout button on protected pages
   const logoutBtn = document.getElementById("logoutBtn");
-  if (logoutBtn) logoutBtn.addEventListener("click", logout);
+  if (logoutBtn) {
+    logoutBtn.addEventListener("click", logout);
+  }
 
+  // Admin-only controls
   const addUserBtn = document.getElementById("addUserBtn");
-  if (addUserBtn) addUserBtn.addEventListener("click", addUser);
-
-  protectUserPages();
-  protectAdminPages();
-  loadUserTable();
+  if (addUserBtn) {
+    addUserBtn.addEventListener("click", addUser);
+    loadUserTable();
+  }
 });
