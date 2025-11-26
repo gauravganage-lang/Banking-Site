@@ -17,6 +17,7 @@
       <a href="#jaiib">JAIIB</a>
       <a href="#caiib">CAIIB</a>
       <a href="#internal">Internal Exams</a>
+      <a href="#quiz">MCQ Quiz</a>
       <button id="logoutBtn" class="secondary-btn" type="button">Logout</button>
     </nav>
   </header>
@@ -52,6 +53,38 @@
         <li>NPA Management</li>
         <li>Priority Sector Lending & Government Schemes</li>
       </ul>
+    </section>
+
+    <!-- 🔽 NEW: MCQ Quiz Section -->
+    <section id="quiz" class="card-section">
+      <h2>MCQ Practice Quiz</h2>
+      <p style="margin-bottom: 0.75rem; font-size: 0.9rem;">
+        Select the exam and load a random question. Answer and check your response instantly.
+      </p>
+
+      <div class="quiz-controls">
+        <label for="quizExamSelect">Exam:</label>
+        <select id="quizExamSelect">
+          <option value="jaiib">JAIIB</option>
+          <option value="caiib">CAIIB</option>
+          <option value="internal">Internal Promotion</option>
+        </select>
+
+        <button id="quizLoadBtn" type="button" class="secondary-btn">
+          Load Question
+        </button>
+      </div>
+
+      <div id="quizCard" class="quiz-card" style="display:none;">
+        <div id="quizQuestionText" class="quiz-question"></div>
+        <div id="quizOptions" class="quiz-options"></div>
+
+        <button id="quizCheckBtn" type="button" class="primary-btn quiz-check-btn">
+          Check Answer
+        </button>
+
+        <div id="quizFeedback" class="quiz-feedback"></div>
+      </div>
     </section>
   </main>
 </body>
