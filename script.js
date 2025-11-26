@@ -42,6 +42,189 @@ function ensureDefaultAdmin() {
   }
 }
 
+// Seed some default NOTES + QUIZZES if empty (for JAIIB papers)
+function ensureSeedContent() {
+  // NOTES
+  let notes = loadData(STORAGE_KEYS.NOTES, []);
+  if (!notes.length) {
+    notes = [
+      // PAPER 1 – IE & IFS
+      {
+        id: generateId("note"),
+        paper: "paper1",
+        title: "Indian Economy – Structure & Sectors",
+        content:
+          "• Primary sector: agriculture, allied activities, mining.\n" +
+          "• Secondary sector: manufacturing, construction.\n" +
+          "• Tertiary sector: services – now highest share in GDP.\n" +
+          "• Trend: shift from primary → tertiary; challenge is job creation."
+      },
+      {
+        id: generateId("note"),
+        paper: "paper1",
+        title: "RBI – Functions & Monetary Policy",
+        content:
+          "• Currency authority & banker to Government/banks.\n" +
+          "• Uses CRR, SLR, Repo/Reverse Repo, OMOs as tools.\n" +
+          "• Monetary Policy Committee (MPC) targets inflation at 4% ±2%."
+      },
+      // PAPER 2 – PPB
+      {
+        id: generateId("note"),
+        paper: "paper2",
+        title: "Banker–Customer Relationship",
+        content:
+          "• Debtor–creditor, agent–principal, trustee–beneficiary.\n" +
+          "• Different roles depending on service: locker, collection, remittance.\n" +
+          "• KYC ensures proper customer identification & risk rating."
+      },
+      {
+        id: generateId("note"),
+        paper: "paper2",
+        title: "Priority Sector Lending (PSL) Essentials",
+        content:
+          "• Targets: 40% of ANBC for domestic banks.\n" +
+          "• Main categories: Agriculture, MSME, Export, Education, Housing, Others.\n" +
+          "• Sub-targets for small & marginal farmers, micro enterprises, etc."
+      },
+      // PAPER 3 – AFM
+      {
+        id: generateId("note"),
+        paper: "paper3",
+        title: "Golden Rules of Accounting",
+        content:
+          "• Personal a/c: Debit the receiver, Credit the giver.\n" +
+          "• Real a/c: Debit what comes in, Credit what goes out.\n" +
+          "• Nominal a/c: Debit all expenses & losses, Credit all incomes & gains."
+      },
+      {
+        id: generateId("note"),
+        paper: "paper3",
+        title: "Time Value of Money – Basics",
+        content:
+          "• A rupee today > rupee tomorrow due to earning potential.\n" +
+          "• Key formulas: Present Value (PV), Future Value (FV), annuities.\n" +
+          "• Used in loan EMI, bond valuation, capital budgeting."
+      },
+      // PAPER 4 – RBWM
+      {
+        id: generateId("note"),
+        paper: "paper4",
+        title: "Features of Retail Banking",
+        content:
+          "• High volume, low ticket-size, granular risk.\n" +
+          "• Standardised products; heavy use of technology.\n" +
+          "• Focus on customer experience, convenience and cross-selling."
+      },
+      {
+        id: generateId("note"),
+        paper: "paper4",
+        title: "Wealth Management – Core Concepts",
+        content:
+          "• Starts with client profiling & risk assessment.\n" +
+          "• Asset allocation across equity, debt, gold, real estate, etc.\n" +
+          "• Goal-based planning: retirement, education, protection."
+      }
+    ];
+    saveData(STORAGE_KEYS.NOTES, notes);
+  }
+
+  // QUIZZES
+  let quizzes = loadData(STORAGE_KEYS.QUIZZES, []);
+  if (!quizzes.length) {
+    quizzes = [
+      // PAPER 1 – IE & IFS
+      {
+        id: generateId("quiz"),
+        paper: "paper1",
+        question:
+          "Which sector currently contributes the largest share to India’s GDP?",
+        options: ["Primary", "Secondary", "Tertiary (services)", "Quaternary"],
+        answerIndex: 2
+      },
+      {
+        id: generateId("quiz"),
+        paper: "paper1",
+        question: "Inflation in India is primarily measured by:",
+        options: [
+          "IIP (Index of Industrial Production)",
+          "CPI (Consumer Price Index)",
+          "WPI (Wholesale Price Index) only",
+          "FX reserves"
+        ],
+        answerIndex: 1
+      },
+      // PAPER 2 – PPB
+      {
+        id: generateId("quiz"),
+        paper: "paper2",
+        question:
+          "KYC norms in banks are mainly aimed at preventing which risk?",
+        options: [
+          "Credit risk",
+          "Interest rate risk",
+          "Money laundering risk",
+          "Liquidity risk"
+        ],
+        answerIndex: 2
+      },
+      {
+        id: generateId("quiz"),
+        paper: "paper2",
+        question:
+          "Which of the following is a fund-based credit facility?",
+        options: ["Bank guarantee", "Letter of credit", "Cash credit", "LC confirmation"],
+        answerIndex: 2
+      },
+      // PAPER 3 – AFM
+      {
+        id: generateId("quiz"),
+        paper: "paper3",
+        question:
+          "Which account is NOT a nominal account?",
+        options: ["Rent paid", "Salary expense", "Capital account", "Commission received"],
+        answerIndex: 2
+      },
+      {
+        id: generateId("quiz"),
+        paper: "paper3",
+        question:
+          "Which technique is used to measure the present value of future cash flows?",
+        options: ["Trend analysis", "Ratio analysis", "Discounting", "Horizontal analysis"],
+        answerIndex: 2
+      },
+      // PAPER 4 – RBWM
+      {
+        id: generateId("quiz"),
+        paper: "paper4",
+        question:
+          "Home loan to an individual is typically classified under:",
+        options: [
+          "Corporate banking",
+          "Retail banking",
+          "Treasury operations",
+          "Priority sector only"
+        ],
+        answerIndex: 1
+      },
+      {
+        id: generateId("quiz"),
+        paper: "paper4",
+        question:
+          "Asset allocation in wealth management refers to:",
+        options: [
+          "Distributing bank capital across branches",
+          "Allocating customer deposits into CRR/SLR",
+          "Distributing investments across asset classes",
+          "Allocating physical assets in the branch"
+        ],
+        answerIndex: 2
+      }
+    ];
+    saveData(STORAGE_KEYS.QUIZZES, quizzes);
+  }
+}
+
 function getSession() {
   return loadData(STORAGE_KEYS.SESSION, null);
 }
@@ -743,6 +926,7 @@ function markAssignmentSubmitted(assignmentId) {
 // ========== INIT ON LOAD ==========
 document.addEventListener("DOMContentLoaded", () => {
   ensureDefaultAdmin();
+  ensureSeedContent(); // 🔹 adds default notes + quizzes on first run
   enforceRole();
 
   const session = getSession();
