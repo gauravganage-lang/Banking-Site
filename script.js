@@ -140,8 +140,8 @@ function loadUserTable() {
     const cell = document.createElement("td");
     cell.colSpan = 3;
     cell.textContent = "No users found. Add one above.";
-    tableBody.appendChild(row);
     row.appendChild(cell);
+    tableBody.appendChild(row);
     return;
   }
 
@@ -168,6 +168,143 @@ function loadUserTable() {
   });
 }
 
+// =============== QUIZ LOGIC ===============
+
+// Sample questions; you can add more later
+const quizQuestions = {
+  jaiib: [
+    {
+      question:
+        "Which of the following is the main objective of the Reserve Bank of India (RBI)?",
+      options: [
+        "To provide housing loans",
+        "To act as banker to the Government and banks",
+        "To regulate stock exchanges",
+        "To provide life insurance"
+      ],
+      answerIndex: 1,
+      explanation:
+        "RBI acts as the central bank, banker to the Government and other banks, and is the monetary authority."
+    },
+    {
+      question: "CRR (Cash Reserve Ratio) is maintained with:",
+      options: ["NABARD", "SEBI", "RBI", "State Government"],
+      answerIndex: 2,
+      explanation:
+        "Banks maintain the required CRR as cash balances with the RBI."
+    }
+  ],
+  caiib: [
+    {
+      question:
+        "Duration of a bond is primarily used to measure which type of risk?",
+      options: [
+        "Credit Risk",
+        "Liquidity Risk",
+        "Interest Rate Risk",
+        "Operational Risk"
+      ],
+      answerIndex: 2,
+      explanation:
+        "Duration measures the sensitivity of bond prices to changes in interest rates."
+    }
+  ],
+  internal: [
+    {
+      question:
+        "An asset is classified as NPA if interest or installments remain overdue for more than:",
+      options: ["30 days", "60 days", "90 days", "180 days"],
+      answerIndex: 2,
+      explanation:
+        "As per current norms, an asset becomes NPA when overdue for more than 90 days."
+    }
+  ]
+};
+
+let currentQuizQuestion = null;
+
+function loadRandomQuestion() {
+  const examSelect = document.getElementById("quizExamSelect");
+  const quizCard = document.getElementById("quizCard");
+  const questionText = document.getElementById("quizQuestionText");
+  const optionsContainer = document.getElementById("quizOptions");
+  const feedback = document.getElementById("quizFeedback");
+
+  if (!examSelect || !quizCard || !questionText || !optionsContainer || !feedback) {
+    return;
+  }
+
+  const examKey = examSelect.value;
+  const examQuestions = quizQuestions[examKey];
+
+  if (!examQuestions || examQuestions.length === 0) {
+    quizCard.style.display = "none";
+    alert("No questions available for this exam yet.");
+    return;
+  }
+
+  const randomIndex = Math.floor(Math.random() * examQuestions.length);
+  currentQuizQuestion = examQuestions[randomIndex];
+
+  questionText.textContent = currentQuizQuestion.question;
+
+  optionsContainer.innerHTML = "";
+  currentQuizQuestion.options.forEach((opt, index) => {
+    const wrapper = document.createElement("div");
+    wrapper.className = "quiz-option-item";
+
+    const input = document.createElement("input");
+    input.type = "radio";
+    input.name = "quizOption";
+    input.value = index;
+    input.id = `quiz-option-${index}`;
+
+    const label = document.createElement("label");
+    label.htmlFor = input.id;
+    label.textContent = opt;
+
+    wrapper.appendChild(input);
+    wrapper.appendChild(label);
+    optionsContainer.appendChild(wrapper);
+  });
+
+  feedback.textContent = "";
+  feedback.className = "quiz-feedback";
+  quizCard.style.display = "block";
+}
+
+function checkQuizAnswer() {
+  if (!currentQuizQuestion) {
+    alert("Please load a question first.");
+    return;
+  }
+
+  const selected = document.querySelector('input[name="quizOption"]:checked');
+  const feedback = document.getElementById("quizFeedback");
+  if (!feedback) return;
+
+  if (!selected) {
+    alert("Please select an option.");
+    return;
+  }
+
+  const selectedIndex = parseInt(selected.value, 10);
+  const correctIndex = currentQuizQuestion.answerIndex;
+  const correctText = currentQuizQuestion.options[correctIndex];
+
+  if (selectedIndex === correctIndex) {
+    feedback.textContent = "Correct! " + currentQuizQuestion.explanation;
+    feedback.className = "quiz-feedback correct";
+  } else {
+    feedback.textContent =
+      "Incorrect. Correct answer: " +
+      correctText +
+      ". " +
+      currentQuizQuestion.explanation;
+    feedback.className = "quiz-feedback incorrect";
+  }
+}
+
 // =============== INITIALIZE ON PAGE LOAD ===============
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -191,5 +328,16 @@ document.addEventListener("DOMContentLoaded", () => {
   if (addUserBtn) {
     addUserBtn.addEventListener("click", addUser);
     loadUserTable();
+  }
+
+  // Quiz controls on dashboard
+  const quizLoadBtn = document.getElementById("quizLoadBtn");
+  if (quizLoadBtn) {
+    quizLoadBtn.addEventListener("click", loadRandomQuestion);
+  }
+
+  const quizCheckBtn = document.getElementById("quizCheckBtn");
+  if (quizCheckBtn) {
+    quizCheckBtn.addEventListener("click", checkQuizAnswer);
   }
 });
