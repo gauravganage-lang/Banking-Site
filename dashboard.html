@@ -1,91 +1,205 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>User Dashboard | Banking Study Portal</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="style.css" />
-  <script defer src="script.js"></script>
-</head>
-<body data-require-role="user">
-  <header class="top-bar">
-    <div class="top-left">
-      <h2>Banking Study Portal</h2>
-      <span id="welcomeUser" class="welcome-text"></span>
-    </div>
-    <nav class="nav">
-      <a href="#jaiib">JAIIB</a>
-      <a href="#caiib">CAIIB</a>
-      <a href="#internal">Internal Exams</a>
-      <a href="#quiz">MCQ Quiz</a>
-      <button id="logoutBtn" class="secondary-btn" type="button">Logout</button>
-    </nav>
-  </header>
-
-  <main class="main-content">
-    <section>
-      <h1>Welcome to your Study Dashboard</h1>
-      <p>Access JAIIB, CAIIB and internal promotion exam notes here.</p>
-    </section>
-
     <section id="jaiib" class="card-section">
-      <h2>JAIIB</h2>
-      <ul>
-        <li>Principles & Practices of Banking</li>
-        <li>Accounting & Finance for Bankers</li>
-        <li>Legal & Regulatory Aspects of Banking</li>
-      </ul>
-    </section>
-
-    <section id="caiib" class="card-section">
-      <h2>CAIIB</h2>
-      <ul>
-        <li>Advanced Bank Management</li>
-        <li>Bank Financial Management</li>
-        <li>Elective Papers (Retail, Rural, IT, etc.)</li>
-      </ul>
-    </section>
-
-    <section id="internal" class="card-section">
-      <h2>Internal Promotion Exams</h2>
-      <ul>
-        <li>Credit & Advances</li>
-        <li>NPA Management</li>
-        <li>Priority Sector Lending & Government Schemes</li>
-      </ul>
-    </section>
-
-    <!-- 🔽 NEW: MCQ Quiz Section -->
-    <section id="quiz" class="card-section">
-      <h2>MCQ Practice Quiz</h2>
+      <h2>JAIIB Syllabus – Latest Pattern</h2>
       <p style="margin-bottom: 0.75rem; font-size: 0.9rem;">
-        Select the exam and load a random question. Answer and check your response instantly.
+        Based on the current IIBF syllabus: 4 compulsory papers and 4 modules (A–D) in each paper.
       </p>
 
-      <div class="quiz-controls">
-        <label for="quizExamSelect">Exam:</label>
-        <select id="quizExamSelect">
-          <option value="jaiib">JAIIB</option>
-          <option value="caiib">CAIIB</option>
-          <option value="internal">Internal Promotion</option>
-        </select>
+      <div class="syllabus-grid">
+        <!-- PAPER 1 -->
+        <article class="paper-card">
+          <h3>Paper 1: Indian Economy &amp; Indian Financial System (IE &amp; IFS)</h3>
 
-        <button id="quizLoadBtn" type="button" class="secondary-btn">
-          Load Question
-        </button>
-      </div>
+          <div class="module-block">
+            <h4>Module A: Indian Economic Architecture</h4>
+            <ul>
+              <li>Overview of Indian economy – structure (primary, secondary, tertiary sectors)</li>
+              <li>Economic planning in India, NITI Aayog, recent reforms</li>
+              <li>Economic development indicators – poverty, unemployment, inequality</li>
+              <li>Liberalisation, Privatisation, Globalisation (LPG) &amp; economic reforms</li>
+              <li>Government’s role in development, SDGs &amp; inclusive growth</li>
+            </ul>
+          </div>
 
-      <div id="quizCard" class="quiz-card" style="display:none;">
-        <div id="quizQuestionText" class="quiz-question"></div>
-        <div id="quizOptions" class="quiz-options"></div>
+          <div class="module-block">
+            <h4>Module B: Economic Concepts Related to Banking</h4>
+            <ul>
+              <li>Basic micro &amp; macro economics – demand, supply, elasticity</li>
+              <li>Money &amp; inflation – types, causes &amp; control</li>
+              <li>Interest rates – real vs nominal, term structure</li>
+              <li>National income – GDP, GNP, measurement &amp; limitations</li>
+              <li>Business cycles, fiscal policy &amp; monetary policy</li>
+            </ul>
+          </div>
 
-        <button id="quizCheckBtn" type="button" class="primary-btn quiz-check-btn">
-          Check Answer
-        </button>
+          <div class="module-block">
+            <h4>Module C: Indian Financial Architecture</h4>
+            <ul>
+              <li>Structure of Indian financial system – markets, instruments &amp; participants</li>
+              <li>Role of RBI, monetary policy framework &amp; tools</li>
+              <li>Commercial banks, cooperative banks, RRBs, small finance &amp; payments banks</li>
+              <li>NBFCs, DFIs (NABARD, SIDBI, EXIM, etc.) &amp; MFIs</li>
+              <li>Financial market regulators – RBI, SEBI, IRDAI, PFRDA</li>
+            </ul>
+          </div>
 
-        <div id="quizFeedback" class="quiz-feedback"></div>
+          <div class="module-block">
+            <h4>Module D: Financial Products &amp; Services</h4>
+            <ul>
+              <li>Money market &amp; capital market instruments (CP, CD, bonds, shares, etc.)</li>
+              <li>Mutual funds – types, NAV, risks &amp; regulation</li>
+              <li>Insurance &amp; pension products – basics of life / general insurance, NPS, APY</li>
+              <li>Derivatives – forwards, futures, options (overview)</li>
+              <li>Factoring, forfaiting, securitisation, REITs &amp; InvITs</li>
+            </ul>
+          </div>
+        </article>
+
+        <!-- PAPER 2 -->
+        <article class="paper-card">
+          <h3>Paper 2: Principles &amp; Practices of Banking (PPB)</h3>
+
+          <div class="module-block">
+            <h4>Module A: General Banking Operations</h4>
+            <ul>
+              <li>Banker–customer relationship &amp; types of customers</li>
+              <li>Different deposit products – SB, CA, term deposits, NRE/NRO, etc.</li>
+              <li>KYC, AML, CFT &amp; PMLA – risk based approach &amp; reporting</li>
+              <li>Account opening, operation, nomination, closure</li>
+              <li>Customer service, banking ombudsman &amp; grievance redressal</li>
+            </ul>
+          </div>
+
+          <div class="module-block">
+            <h4>Module B: Functions of Banks</h4>
+            <ul>
+              <li>Primary &amp; secondary functions of banks – deposits, lending &amp; services</li>
+              <li>Types of advances – fund based &amp; non-fund based</li>
+              <li>Credit appraisal basics – 5 Cs of credit, financial analysis overview</li>
+              <li>Types of securities, modes of charge – lien, pledge, hypothecation, mortgage</li>
+              <li>Priority Sector Lending (PSL), government sponsored schemes</li>
+              <li>NPA concepts, asset classification &amp; recovery channels (SARFAESI, DRT, Lok Adalat)</li>
+            </ul>
+          </div>
+
+          <div class="module-block">
+            <h4>Module C: Banking Technology</h4>
+            <ul>
+              <li>Core Banking Systems (CBS) – features &amp; impact on operations</li>
+              <li>Payment systems – NEFT, RTGS, IMPS, UPI, BBPS, cards &amp; wallets</li>
+              <li>Alternate delivery channels – ATM, POS, internet &amp; mobile banking</li>
+              <li>Cyber security risks, information security basics, IT controls</li>
+              <li>Digital products – e-KYC, e-mandates, digital lending basics</li>
+            </ul>
+          </div>
+
+          <div class="module-block">
+            <h4>Module D: Ethics in Banks &amp; Financial Institutions</h4>
+            <ul>
+              <li>Concept of business ethics &amp; professional ethics in banking</li>
+              <li>Code of conduct, fair practices code &amp; customer rights</li>
+              <li>Corporate governance in banks &amp; compliance culture</li>
+              <li>Whistleblowing, conflict of interest &amp; handling complaints</li>
+              <li>Ethics and technology – data privacy, confidentiality &amp; security</li>
+            </ul>
+          </div>
+        </article>
+
+        <!-- PAPER 3 -->
+        <article class="paper-card">
+          <h3>Paper 3: Accounting &amp; Financial Management for Bankers (AFM)</h3>
+
+          <div class="module-block">
+            <h4>Module A: Accounting Principles &amp; Processes</h4>
+            <ul>
+              <li>Basic accounting concepts, principles &amp; standards (including Ind AS – overview)</li>
+              <li>Double entry system, journal, ledger &amp; trial balance</li>
+              <li>Subsidiary books, rectification of errors</li>
+              <li>Depreciation accounting, provisions &amp; reserves</li>
+              <li>Final accounts – trading, P&amp;L and balance sheet basics</li>
+            </ul>
+          </div>
+
+          <div class="module-block">
+            <h4>Module B: Financial Statements &amp; Core Banking Systems</h4>
+            <ul>
+              <li>Financial statements of banks – schedules &amp; disclosures</li>
+              <li>Income recognition, provisioning norms (NPA related)</li>
+              <li>Branch vs HO accounting, inter-branch transactions</li>
+              <li>Impact of core banking on accounting &amp; reporting</li>
+              <li>Analysis of financial statements – basics of cash flow &amp; fund flow</li>
+            </ul>
+          </div>
+
+          <div class="module-block">
+            <h4>Module C: Financial Management</h4>
+            <ul>
+              <li>Time value of money &amp; basic discounting / compounding</li>
+              <li>Ratio analysis – profitability, liquidity, solvency &amp; efficiency ratios</li>
+              <li>Capital budgeting techniques (NPV, IRR, Payback – concepts)</li>
+              <li>Cost of capital, leverage concepts</li>
+              <li>Working capital management basics</li>
+            </ul>
+          </div>
+
+          <div class="module-block">
+            <h4>Module D: Taxation &amp; Fundamentals of Costing</h4>
+            <ul>
+              <li>Basics of direct &amp; indirect taxes relevant to banks</li>
+              <li>TDS / TCS concepts &amp; compliance basics</li>
+              <li>GST overview – place / time / value of supply (basic idea)</li>
+              <li>Costing concepts – cost classification, cost sheet</li>
+              <li>Marginal costing, break-even analysis &amp; budgeting fundamentals</li>
+            </ul>
+          </div>
+        </article>
+
+        <!-- PAPER 4 -->
+        <article class="paper-card">
+          <h3>Paper 4: Retail Banking &amp; Wealth Management (RBWM)</h3>
+
+          <div class="module-block">
+            <h4>Module A: Retail Banking</h4>
+            <ul>
+              <li>Concept &amp; characteristics of retail banking</li>
+              <li>Retail banking business models &amp; role within bank operations</li>
+              <li>Retail liabilities – SB, CA, term deposits &amp; bundled products</li>
+              <li>Customer profiling &amp; segmentation in retail banking</li>
+              <li>Challenges &amp; future of retail banking</li>
+            </ul>
+          </div>
+
+          <div class="module-block">
+            <h4>Module B: Retail Products &amp; Recovery</h4>
+            <ul>
+              <li>Retail asset products – housing, vehicle, personal, education loans, credit cards</li>
+              <li>Documentation, appraisal &amp; risk in retail lending</li>
+              <li>Retail NPAs, recovery &amp; collection process</li>
+              <li>Securitisation &amp; off-balance sheet retail exposures (overview)</li>
+              <li>Consumer protection &amp; grievance redressal in retail products</li>
+            </ul>
+          </div>
+
+          <div class="module-block">
+            <h4>Module C: Support Services – Marketing of Banking Services / Products</h4>
+            <ul>
+              <li>Basics of services marketing &amp; 7Ps of marketing for banks</li>
+              <li>Customer relationship management (CRM) &amp; service quality</li>
+              <li>Cross-selling &amp; up-selling of banking / third party products</li>
+              <li>Channels &amp; distribution strategy in retail banking</li>
+              <li>Digital marketing basics for banking products</li>
+            </ul>
+          </div>
+
+          <div class="module-block">
+            <h4>Module D: Wealth Management</h4>
+            <ul>
+              <li>Wealth management process &amp; client profiling</li>
+              <li>Asset classes – equity, debt, gold, real estate &amp; alternative products</li>
+              <li>Mutual funds, PMS &amp; other investment products (overview)</li>
+              <li>Retirement &amp; tax planning basics for individuals</li>
+              <li>Suitability, risk profiling &amp; regulatory guidelines</li>
+            </ul>
+          </div>
+        </article>
       </div>
     </section>
-  </main>
-</body>
-</html>
