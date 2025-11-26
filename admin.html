@@ -1,49 +1,65 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Admin Panel</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <title>Admin Panel | Banking Study Portal</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style.css" />
   <script defer src="script.js"></script>
 </head>
-
-<body data-admin="true">
-
+<body data-require-role="admin">
   <header class="top-bar">
-    <h2>Admin Panel</h2>
-    <button id="logoutBtn" class="logout-btn">Logout</button>
+    <div class="top-left">
+      <h2>Admin Panel</h2>
+      <span class="welcome-text">Logged in as Admin</span>
+    </div>
+    <nav class="nav">
+      <button id="logoutBtn" class="secondary-btn" type="button">Logout</button>
+    </nav>
   </header>
 
   <main class="main-content">
+    <section class="admin-section">
+      <h1>User Management</h1>
+      <p>Create and delete user accounts for the study portal.</p>
 
-    <h1>User Management</h1>
+      <div class="admin-card">
+        <h3>Add New User</h3>
+        <label for="newUserEmail">Email</label>
+        <input
+          type="email"
+          id="newUserEmail"
+          placeholder="officer@bank.com"
+        />
 
-    <!-- Add User Form -->
-    <div class="admin-box">
-      <h3>Add New User</h3>
+        <label for="newUserPassword">Password</label>
+        <input
+          type="text"
+          id="newUserPassword"
+          placeholder="Set a password"
+        />
 
-      <label>Email</label>
-      <input type="text" id="newUserEmail">
+        <button id="addUserBtn" class="primary-btn admin-add-btn" type="button">
+          Add User
+        </button>
+      </div>
 
-      <label>Password</label>
-      <input type="text" id="newUserPassword">
-
-      <button id="addUserBtn" class="primary-btn">Add User</button>
-    </div>
-
-    <h3>Existing Users</h3>
-    <table border="1" width="100%" id="userTable">
-      <thead>
-        <tr>
-          <th>Email</th>
-          <th>Password</th>
-          <th>Delete</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
-
+      <div class="admin-card">
+        <h3>Existing Users</h3>
+        <table class="user-table">
+          <thead>
+            <tr>
+              <th>Email</th>
+              <th>Password</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="userTableBody">
+            <!-- Filled by JS -->
+          </tbody>
+        </table>
+      </div>
+    </section>
   </main>
-
 </body>
 </html>
