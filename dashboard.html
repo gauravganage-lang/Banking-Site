@@ -1,12 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>User Dashboard | Banking Study Portal</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style.css" />
+  <script defer src="script.js"></script>
+</head>
+<body>
+  <header class="top-bar">
+    <div class="top-left">
+      <h2>Banking Study Portal</h2>
+      <span class="welcome-text">JAIIB – Latest Syllabus</span>
+    </div>
+    <nav class="nav">
+      <!-- Later you can link CAIIB / Internal pages here -->
+      <a href="#jaiib">JAIIB</a>
+      <a href="#quiz">MCQ (future)</a>
+    </nav>
+  </header>
+
+  <main class="main-content">
     <section id="jaiib" class="card-section">
-      <h2>JAIIB Syllabus – Latest Pattern</h2>
+      <h1>JAIIB Syllabus – Latest Pattern</h1>
       <p style="margin-bottom: 0.75rem; font-size: 0.9rem;">
-        Based on the current IIBF syllabus: 4 compulsory papers and 4 modules (A–D) in each paper.
+        4 compulsory papers. Click a paper below to view its detailed syllabus (modules A–D).
       </p>
 
+      <!-- 🔹 SUBJECT / PAPER SELECTION TABS -->
+      <div class="subject-tabs">
+        <button class="subject-tab active" data-paper="paper1">
+          Paper 1: IE &amp; IFS
+        </button>
+        <button class="subject-tab" data-paper="paper2">
+          Paper 2: PPB
+        </button>
+        <button class="subject-tab" data-paper="paper3">
+          Paper 3: AFM
+        </button>
+        <button class="subject-tab" data-paper="paper4">
+          Paper 4: RBWM
+        </button>
+      </div>
+
+      <!-- 🔹 PAPER CONTENT – ONLY ONE SHOWN AT A TIME -->
       <div class="syllabus-grid">
         <!-- PAPER 1 -->
-        <article class="paper-card">
+        <article class="paper-card active" data-paper="paper1">
           <h3>Paper 1: Indian Economy &amp; Indian Financial System (IE &amp; IFS)</h3>
 
           <div class="module-block">
@@ -55,7 +95,7 @@
         </article>
 
         <!-- PAPER 2 -->
-        <article class="paper-card">
+        <article class="paper-card" data-paper="paper2">
           <h3>Paper 2: Principles &amp; Practices of Banking (PPB)</h3>
 
           <div class="module-block">
@@ -105,7 +145,7 @@
         </article>
 
         <!-- PAPER 3 -->
-        <article class="paper-card">
+        <article class="paper-card" data-paper="paper3">
           <h3>Paper 3: Accounting &amp; Financial Management for Bankers (AFM)</h3>
 
           <div class="module-block">
@@ -154,7 +194,7 @@
         </article>
 
         <!-- PAPER 4 -->
-        <article class="paper-card">
+        <article class="paper-card" data-paper="paper4">
           <h3>Paper 4: Retail Banking &amp; Wealth Management (RBWM)</h3>
 
           <div class="module-block">
@@ -203,3 +243,6 @@
         </article>
       </div>
     </section>
+  </main>
+</body>
+</html>
