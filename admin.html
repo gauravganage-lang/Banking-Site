@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Panel</title>
+  <link rel="stylesheet" href="style.css">
+  <script defer src="script.js"></script>
+</head>
+
+<body data-admin="true">
+
+  <header class="top-bar">
+    <h2>Admin Panel</h2>
+    <button id="logoutBtn" class="logout-btn">Logout</button>
+  </header>
+
+  <main class="main-content">
+
+    <h1>User Management</h1>
+
+    <!-- Add User Form -->
+    <div class="admin-box">
+      <h3>Add New User</h3>
+
+      <label>Email</label>
+      <input type="text" id="newUserEmail">
+
+      <label>Password</label>
+      <input type="text" id="newUserPassword">
+
+      <button id="addUserBtn" class="primary-btn">Add User</button>
+    </div>
+
+    <h3>Existing Users</h3>
+    <table border="1" width="100%" id="userTable">
+      <thead>
+        <tr>
+          <th>Email</th>
+          <th>Password</th>
+          <th>Delete</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+
+  </main>
+
+</body>
+</html>
