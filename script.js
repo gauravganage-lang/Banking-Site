@@ -8,7 +8,7 @@ const STORAGE_KEYS = {
   SESSION: "bp_session"
 };
 
-// ========== HELPERS ==========
+// ========== GENERIC HELPERS ==========
 function loadData(key, fallback = []) {
   try {
     const raw = localStorage.getItem(key);
@@ -28,6 +28,8 @@ function generateId(prefix) {
 }
 
 // ========== USERS & SESSION ==========
+
+// Ensure default admin user exists
 function ensureDefaultAdmin() {
   let users = loadData(STORAGE_KEYS.USERS, []);
   const adminExists = users.some((u) => u.role === "admin");
@@ -42,13 +44,13 @@ function ensureDefaultAdmin() {
   }
 }
 
-// Seed some default NOTES + QUIZZES if empty (for JAIIB papers)
+// Seed initial JAIIB notes & quizzes (esp. PPB) if empty
 function ensureSeedContent() {
-  // NOTES
+  // ---------- NOTES ----------
   let notes = loadData(STORAGE_KEYS.NOTES, []);
   if (!notes.length) {
     notes = [
-      // PAPER 1 – IE & IFS
+      // ========== PAPER 1 – IE & IFS ==========
       {
         id: generateId("note"),
         paper: "paper1",
@@ -56,84 +58,169 @@ function ensureSeedContent() {
         content:
           "• Primary sector: agriculture, allied activities, mining.\n" +
           "• Secondary sector: manufacturing, construction.\n" +
-          "• Tertiary sector: services – now highest share in GDP.\n" +
-          "• Trend: shift from primary → tertiary; challenge is job creation."
+          "• Tertiary sector: services – now largest contributor to GDP.\n" +
+          "• Structural change: movement from primary → tertiary with need for jobs in industry/services."
       },
       {
         id: generateId("note"),
         paper: "paper1",
-        title: "RBI – Functions & Monetary Policy",
+        title: "RBI – Roles & Key Functions",
         content:
-          "• Currency authority & banker to Government/banks.\n" +
-          "• Uses CRR, SLR, Repo/Reverse Repo, OMOs as tools.\n" +
-          "• Monetary Policy Committee (MPC) targets inflation at 4% ±2%."
+          "• Monetary authority – formulation & implementation of monetary policy.\n" +
+          "• Issuer of currency and banker to Government & banks.\n" +
+          "• Regulator & supervisor of banks and NBFCs.\n" +
+          "• Manager of forex reserves and debt manager for Government."
       },
-      // PAPER 2 – PPB
+      {
+        id: generateId("note"),
+        paper: "paper1",
+        title: "Components of the Indian Financial System",
+        content:
+          "• Financial markets: money market, capital market, forex, derivatives.\n" +
+          "• Financial institutions: banks, NBFCs, DFIs (NABARD, SIDBI, EXIM, etc.).\n" +
+          "• Financial instruments: deposits, loans, bonds, shares, mutual funds.\n" +
+          "• Regulators: RBI, SEBI, IRDAI, PFRDA and others."
+      },
+
+      // ========== PAPER 2 – PPB (MAIN FOCUS) ==========
       {
         id: generateId("note"),
         paper: "paper2",
-        title: "Banker–Customer Relationship",
+        title: "Banker–Customer Relationship in Detail",
         content:
-          "• Debtor–creditor, agent–principal, trustee–beneficiary.\n" +
-          "• Different roles depending on service: locker, collection, remittance.\n" +
-          "• KYC ensures proper customer identification & risk rating."
+          "• Debtor–creditor: when customer deposits money, bank is debtor.\n" +
+          "• Creditor–debtor: when bank gives a loan, bank becomes creditor.\n" +
+          "• Trustee–beneficiary: safe custody articles, locker service.\n" +
+          "• Agent–principal: collection of cheques, bills, standing instructions.\n" +
+          "• Obligations: secrecy of account, honouring cheques, due care."
       },
       {
         id: generateId("note"),
         paper: "paper2",
-        title: "Priority Sector Lending (PSL) Essentials",
+        title: "Types of Deposit Accounts",
         content:
-          "• Targets: 40% of ANBC for domestic banks.\n" +
-          "• Main categories: Agriculture, MSME, Export, Education, Housing, Others.\n" +
-          "• Sub-targets for small & marginal farmers, micro enterprises, etc."
+          "• Savings Bank (SB): mainly for individuals, limited withdrawals, interest paid.\n" +
+          "• Current Account (CA): for business entities, no interest, high transaction volume.\n" +
+          "• Term / Fixed Deposits: fixed tenure, higher interest, premature withdrawal allowed with conditions.\n" +
+          "• Recurring Deposits: fixed instalments monthly, used for goal-based savings.\n" +
+          "• NRE / NRO accounts for NRIs with different tax & repatriation rules."
       },
-      // PAPER 3 – AFM
+      {
+        id: generateId("note"),
+        paper: "paper2",
+        title: "KYC & AML – Core Concepts",
+        content:
+          "• KYC = Know Your Customer; objective is to verify identity & address and assess risk.\n" +
+          "• 3 key components: Customer Identification, Customer Due Diligence (CDD), ongoing monitoring.\n" +
+          "• Risk-based approach: Low / Medium / High risk customers.\n" +
+          "• AML/CFT: detect & report suspicious transactions (STR) and large cash transactions (CTR)."
+      },
+      {
+        id: generateId("note"),
+        paper: "paper2",
+        title: "Negotiable Instruments – Essentials",
+        content:
+          "• Cheque, bill of exchange, promissory note are negotiable instruments.\n" +
+          "• Features: freely transferable, holder in due course gets better title.\n" +
+          "• Crossing: general & special crossing restrict payment to a banker.\n" +
+          "• Endorsements: blank, special, restrictive, conditional, sans recourse."
+      },
+      {
+        id: generateId("note"),
+        paper: "paper2",
+        title: "NPA Classification – Overview",
+        content:
+          "• NPA = interest and/or instalment remains overdue for more than 90 days.\n" +
+          "• Categories: Sub-standard, Doubtful, Loss asset.\n" +
+          "• Income recognition: on NPAs, interest is not booked as income on accrual basis.\n" +
+          "• Provisioning: higher provisions as asset quality deteriorates."
+      },
+      {
+        id: generateId("note"),
+        paper: "paper2",
+        title: "SARFAESI Act & Recovery Channels",
+        content:
+          "• SARFAESI allows secured creditors to enforce security without court intervention (for eligible accounts).\n" +
+          "• Measures: take possession of securities, take over management, sell assets.\n" +
+          "• Other channels: DRTs, Lok Adalats, compromise settlements, OTS.\n" +
+          "• Objective: faster recovery and reduction of NPAs."
+      },
+      {
+        id: generateId("note"),
+        paper: "paper2",
+        title: "Payment & Settlement Systems",
+        content:
+          "• RTGS: high-value real-time gross settlement.\n" +
+          "• NEFT: electronic fund transfer in batches as per current RBI guidelines.\n" +
+          "• IMPS: 24x7 instant payments via banks & PPIs.\n" +
+          "• UPI: app-based real-time payments using VPA/QR.\n" +
+          "• BBPS: interoperable bill payments platform."
+      },
+      {
+        id: generateId("note"),
+        paper: "paper2",
+        title: "Banking Ethics & Customer Rights",
+        content:
+          "• Fair treatment: transparency in pricing, non-discrimination, responsible selling.\n" +
+          "• Codes: BCSBI code, RBI’s Charter of Customer Rights.\n" +
+          "• Key rights: fair treatment, transparency, suitability, privacy, grievance redressal.\n" +
+          "• Role of internal code of conduct and whistleblower policy."
+      },
+
+      // ========== PAPER 3 – AFM ==========
       {
         id: generateId("note"),
         paper: "paper3",
-        title: "Golden Rules of Accounting",
+        title: "Accounting Equation & Double Entry",
         content:
-          "• Personal a/c: Debit the receiver, Credit the giver.\n" +
-          "• Real a/c: Debit what comes in, Credit what goes out.\n" +
-          "• Nominal a/c: Debit all expenses & losses, Credit all incomes & gains."
+          "• Basic equation: Assets = Liabilities + Capital.\n" +
+          "• Every transaction has dual aspect – at least one debit and one credit.\n" +
+          "• Flow: Journal → Ledger → Trial balance → Final accounts.\n" +
+          "• Trial balance is a statement, not an account."
       },
       {
         id: generateId("note"),
         paper: "paper3",
-        title: "Time Value of Money – Basics",
+        title: "Key Financial Ratios for Bankers",
         content:
-          "• A rupee today > rupee tomorrow due to earning potential.\n" +
-          "• Key formulas: Present Value (PV), Future Value (FV), annuities.\n" +
-          "• Used in loan EMI, bond valuation, capital budgeting."
+          "• Liquidity: Current ratio, Quick ratio.\n" +
+          "• Leverage: Debt–equity ratio.\n" +
+          "• Profitability: Gross profit, Net profit margin, ROE, ROA.\n" +
+          "• Activity: Inventory turnover, Debtor turnover.\n" +
+          "• Interpretation more important than pure calculation."
       },
-      // PAPER 4 – RBWM
+
+      // ========== PAPER 4 – RBWM ==========
       {
         id: generateId("note"),
         paper: "paper4",
-        title: "Features of Retail Banking",
+        title: "Retail Banking – Advantages & Risks",
         content:
-          "• High volume, low ticket-size, granular risk.\n" +
-          "• Standardised products; heavy use of technology.\n" +
-          "• Focus on customer experience, convenience and cross-selling."
+          "• For bank: diversified risk, stable income, cross-selling opportunities.\n" +
+          "• For customer: convenience, standardised products, digital access.\n" +
+          "• Risks: credit risk in unsecured loans, operational & fraud risk, interest rate risk.\n" +
+          "• Need for strong scoring models and analytics."
       },
       {
         id: generateId("note"),
         paper: "paper4",
-        title: "Wealth Management – Core Concepts",
+        title: "Mutual Funds – Basic Types",
         content:
-          "• Starts with client profiling & risk assessment.\n" +
-          "• Asset allocation across equity, debt, gold, real estate, etc.\n" +
-          "• Goal-based planning: retirement, education, protection."
+          "• Equity funds: higher risk, higher return potential.\n" +
+          "• Debt funds: invest in bonds, debentures, money market instruments.\n" +
+          "• Hybrid funds: mix of equity and debt.\n" +
+          "• SIP: disciplined periodic investment.\n" +
+          "• Bank staff should follow suitability & risk profiling before selling."
       }
     ];
     saveData(STORAGE_KEYS.NOTES, notes);
   }
 
-  // QUIZZES
+  // ---------- QUIZZES ----------
   let quizzes = loadData(STORAGE_KEYS.QUIZZES, []);
   if (!quizzes.length) {
     quizzes = [
-      // PAPER 1 – IE & IFS
+      // ========== PAPER 1 – IE & IFS ==========
       {
         id: generateId("quiz"),
         paper: "paper1",
@@ -145,26 +232,93 @@ function ensureSeedContent() {
       {
         id: generateId("quiz"),
         paper: "paper1",
-        question: "Inflation in India is primarily measured by:",
+        question: "Which of the following is NOT an objective of monetary policy?",
         options: [
-          "IIP (Index of Industrial Production)",
-          "CPI (Consumer Price Index)",
-          "WPI (Wholesale Price Index) only",
-          "FX reserves"
+          "Price stability",
+          "Control of inflation",
+          "Ensuring profitability of all banks",
+          "Economic growth with stability"
+        ],
+        answerIndex: 2
+      },
+      {
+        id: generateId("quiz"),
+        paper: "paper1",
+        question: "Which institution regulates the capital market in India?",
+        options: ["RBI", "SEBI", "IRDAI", "PFRDA"],
+        answerIndex: 1
+      },
+      {
+        id: generateId("quiz"),
+        paper: "paper1",
+        question:
+          "Which of the following is a Development Financial Institution (DFI)?",
+        options: ["NABARD", "RBI", "SEBI", "NPCI"],
+        answerIndex: 0
+      },
+
+      // ========== PAPER 2 – PPB (MAIN FOCUS) ==========
+      {
+        id: generateId("quiz"),
+        paper: "paper2",
+        question:
+          "Under banker–customer relationship, when a customer deposits money, the bank becomes:",
+        options: [
+          "Creditor of the customer",
+          "Debtor of the customer",
+          "Agent of the customer",
+          "Trustee of the customer"
         ],
         answerIndex: 1
       },
-      // PAPER 2 – PPB
       {
         id: generateId("quiz"),
         paper: "paper2",
         question:
-          "KYC norms in banks are mainly aimed at preventing which risk?",
+          "Which account is most suitable for a business entity with large number of daily transactions?",
+        options: [
+          "Savings Bank account",
+          "Current account",
+          "Recurring deposit",
+          "Fixed deposit"
+        ],
+        answerIndex: 1
+      },
+      {
+        id: generateId("quiz"),
+        paper: "paper2",
+        question:
+          "KYC guidelines are primarily meant to prevent which of the following?",
         options: [
           "Credit risk",
+          "Money laundering and terrorist financing",
           "Interest rate risk",
-          "Money laundering risk",
-          "Liquidity risk"
+          "Operational risk in branches"
+        ],
+        answerIndex: 1
+      },
+      {
+        id: generateId("quiz"),
+        paper: "paper2",
+        question: "CDD in KYC stands for:",
+        options: [
+          "Customer Due Diligence",
+          "Corporate Debt Derivatives",
+          "Cash Deposit Details",
+          "Credit Default Determination"
+        ],
+        answerIndex: 0
+      },
+      {
+        id: generateId("quiz"),
+        paper: "paper2",
+        question:
+          "A cheque which is payable to a specific banker only is called:",
+        options: [
+          "Bearer cheque",
+          "Order cheque",
+          "Crossed cheque",
+          "Open cheque"
         ],
         answerIndex: 2
       },
@@ -172,38 +326,155 @@ function ensureSeedContent() {
         id: generateId("quiz"),
         paper: "paper2",
         question:
-          "Which of the following is a fund-based credit facility?",
-        options: ["Bank guarantee", "Letter of credit", "Cash credit", "LC confirmation"],
+          "Holder in due course under the NI Act is a person who:",
+        options: [
+          "Obtains the instrument after maturity",
+          "Obtains the instrument before maturity for consideration and in good faith",
+          "Is only the original payee",
+          "Is only a banker"
+        ],
+        answerIndex: 1
+      },
+      {
+        id: generateId("quiz"),
+        paper: "paper2",
+        question:
+          "An account becomes Non-Performing Asset (NPA) when interest or installment remains overdue for more than:",
+        options: ["30 days", "60 days", "90 days", "120 days"],
         answerIndex: 2
       },
-      // PAPER 3 – AFM
+      {
+        id: generateId("quiz"),
+        paper: "paper2",
+        question:
+          "Which of the following is NOT a recovery channel for banks?",
+        options: ["SARFAESI", "DRT", "Lok Adalat", "CRR"],
+        answerIndex: 3
+      },
+      {
+        id: generateId("quiz"),
+        paper: "paper2",
+        question:
+          "Which among the following is a non-fund based facility?",
+        options: ["Term loan", "Cash credit", "Letter of credit", "Overdraft"],
+        answerIndex: 2
+      },
+      {
+        id: generateId("quiz"),
+        paper: "paper2",
+        question:
+          "In RTGS, the settlement of funds takes place:",
+        options: [
+          "In batches at the end of day",
+          "In half-hourly batches",
+          "On a gross basis in real time",
+          "Only once a week"
+        ],
+        answerIndex: 2
+      },
+      {
+        id: generateId("quiz"),
+        paper: "paper2",
+        question: "IMPS is best described as:",
+        options: [
+          "Inward Money Processing System",
+          "Immediate Payment Service providing instant 24x7 funds transfer",
+          "Inter-bank Message Processing System",
+          "International Money Processing Service"
+        ],
+        answerIndex: 1
+      },
+      {
+        id: generateId("quiz"),
+        paper: "paper2",
+        question:
+          "Which of the following is TRUE about Savings Bank accounts?",
+        options: [
+          "They are meant only for companies",
+          "They generally pay interest and are used by individuals for savings",
+          "Overdraft is freely allowed in all SB accounts",
+          "They are non-KYC accounts"
+        ],
+        answerIndex: 1
+      },
+      {
+        id: generateId("quiz"),
+        paper: "paper2",
+        question:
+          "The right of a banker to adjust the debit balance in one account with credit balance in another account of the same customer is called:",
+        options: [
+          "Lien",
+          "Pledge",
+          "Hypothecation",
+          "Right of set-off"
+        ],
+        answerIndex: 3
+      },
+      {
+        id: generateId("quiz"),
+        paper: "paper2",
+        question:
+          "Which one of the following best describes 'Ethics in Banking'?",
+        options: [
+          "Maximising profit at any cost",
+          "Ensuring compliance only with internal circulars",
+          "Doing the right thing even when not specifically regulated",
+          "Strictly following instructions of customers regardless of law"
+        ],
+        answerIndex: 2
+      },
+
+      // ========== PAPER 3 – AFM ==========
+      {
+        id: generateId("quiz"),
+        paper: "paper3",
+        question: "Which of the following is a Real Account?",
+        options: [
+          "Bank account",
+          "Rent account",
+          "Commission received",
+          "Salary expense"
+        ],
+        answerIndex: 0
+      },
       {
         id: generateId("quiz"),
         paper: "paper3",
         question:
-          "Which account is NOT a nominal account?",
-        options: ["Rent paid", "Salary expense", "Capital account", "Commission received"],
-        answerIndex: 2
+          "The main purpose of preparing a Trial Balance is to:",
+        options: [
+          "Calculate net profit",
+          "Check arithmetical accuracy of ledger posting",
+          "Prepare final accounts",
+          "Compute depreciation"
+        ],
+        answerIndex: 1
       },
       {
         id: generateId("quiz"),
         paper: "paper3",
         question:
-          "Which technique is used to measure the present value of future cash flows?",
-        options: ["Trend analysis", "Ratio analysis", "Discounting", "Horizontal analysis"],
+          "Time value of money concept means:",
+        options: [
+          "Money loses value only during inflation",
+          "Money has the same value at all times",
+          "Value of money changes with time due to interest and inflation",
+          "Money value is fixed by Government"
+        ],
         answerIndex: 2
       },
-      // PAPER 4 – RBWM
+
+      // ========== PAPER 4 – RBWM ==========
       {
         id: generateId("quiz"),
         paper: "paper4",
         question:
-          "Home loan to an individual is typically classified under:",
+          "Home loan to individuals generally falls under which business segment?",
         options: [
           "Corporate banking",
           "Retail banking",
           "Treasury operations",
-          "Priority sector only"
+          "Agri-business only"
         ],
         answerIndex: 1
       },
@@ -211,14 +482,27 @@ function ensureSeedContent() {
         id: generateId("quiz"),
         paper: "paper4",
         question:
-          "Asset allocation in wealth management refers to:",
+          "In wealth management, risk profiling of the customer is done primarily to:",
         options: [
-          "Distributing bank capital across branches",
-          "Allocating customer deposits into CRR/SLR",
-          "Distributing investments across asset classes",
-          "Allocating physical assets in the branch"
+          "Decide branch working hours",
+          "Determine CRR and SLR",
+          "Match investment products with customer’s risk appetite",
+          "Fix service charges for the customer"
         ],
         answerIndex: 2
+      },
+      {
+        id: generateId("quiz"),
+        paper: "paper4",
+        question:
+          "An SIP (Systematic Investment Plan) in a mutual fund is best described as:",
+        options: [
+          "One-time lump sum investment",
+          "Fixed periodic investment of a small amount",
+          "Scheme available only to HNIs",
+          "Type of bank deposit"
+        ],
+        answerIndex: 1
       }
     ];
     saveData(STORAGE_KEYS.QUIZZES, quizzes);
@@ -279,7 +563,7 @@ function enforceRole() {
   }
 }
 
-// ========== ADMIN UI NAV ==========
+// ========== ADMIN NAV ==========
 function initAdminNav() {
   const navButtons = document.querySelectorAll(".nav-btn");
   const sections = document.querySelectorAll(".admin-section");
@@ -923,10 +1207,10 @@ function markAssignmentSubmitted(assignmentId) {
   saveData(STORAGE_KEYS.SUBMISSIONS, submissions);
 }
 
-// ========== INIT ON LOAD ==========
+// ========== INIT ON PAGE LOAD ==========
 document.addEventListener("DOMContentLoaded", () => {
   ensureDefaultAdmin();
-  ensureSeedContent(); // 🔹 adds default notes + quizzes on first run
+  ensureSeedContent(); // fill default JAIIB notes + MCQs
   enforceRole();
 
   const session = getSession();
