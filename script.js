@@ -1,161 +1,159 @@
-// Scroll helper for button
-function scrollToSection(id) {
-  const el = document.getElementById(id);
-  if (el) {
-    el.scrollIntoView({ behavior: "smooth" });
-  }
-}
-
-// Sample questions for different exams
-const questions = {
-  jaiib: [
-    {
-      question:
-        "Which of the following is the main objective of the Reserve Bank of India (RBI)?",
-      options: [
-        "To provide housing loans",
-        "To act as banker to the Government and banks",
-        "To provide life insurance",
-        "To manage stock exchanges"
-      ],
-      answerIndex: 1,
-      explanation:
-        "RBI acts as the banker to the Government and to other banks, and is the central monetary authority."
-    },
-    {
-      question: "CRR (Cash Reserve Ratio) is maintained with:",
-      options: [
-        "NABARD",
-        "SEBI",
-        "RBI",
-        "State Government"
-      ],
-      answerIndex: 2,
-      explanation:
-        "CRR is the percentage of deposits that banks must keep with the RBI in cash form."
-    }
-  ],
-  caiib: [
-    {
-      question:
-        "Duration is primarily used as a measure of which type of risk in banks?",
-      options: [
-        "Credit Risk",
-        "Liquidity Risk",
-        "Interest Rate Risk",
-        "Operational Risk"
-      ],
-      answerIndex: 2,
-      explanation:
-        "Duration measures the sensitivity of bond or asset prices to changes in interest rates."
-    }
-  ],
-  internal: [
-    {
-      question:
-        "An asset is classified as NPA if interest or instalment remains overdue for more than:",
-      options: [
-        "30 days",
-        "60 days",
-        "90 days",
-        "120 days"
-      ],
-      answerIndex: 2,
-      explanation:
-        "As per current norms, an asset becomes NPA when it remains overdue for more than 90 days."
-    }
-  ]
+//-------------------------------------------------------------
+// 0. DEFAULT ADMIN LOGIN
+//-------------------------------------------------------------
+const adminCredentials = {
+  email: "admin@bank.com",
+  password: "admin123"
 };
 
-let currentExam = "jaiib";
-let currentQuestion = null;
+//-------------------------------------------------------------
+// 1. LOAD USERS FROM STORAGE OR CREATE EMPTY LIST
+//-------------------------------------------------------------
+let userList = JSON.parse(localStorage.getItem("userList")) || [];
 
-// DOM elements
-const examSelect = document.getElementById("examSelect");
-const loadQuestionBtn = document.getElementById("loadQuestionBtn");
-const quizCard = document.getElementById("quizCard");
-const questionText = document.getElementById("questionText");
-const optionsContainer = document.getElementById("optionsContainer");
-const checkAnswerBtn = document.getElementById("checkAnswerBtn");
-const feedback = document.getElementById("feedback");
+// SAVE USERS
+function saveUsers() {
+  localStorage.setItem("userList", JSON.stringify(userList));
+}
 
-// Load a random question for selected exam
-function loadQuestion() {
-  currentExam = examSelect.value;
-  const examQuestions = questions[currentExam];
+//-------------------------------------------------------------
+// 2. LOGIN HANDLER
+//-------------------------------------------------------------
+function handleLogin(e) {
+  e.preventDefault();
 
-  if (!examQuestions || examQuestions.length === 0) {
-    quizCard.style.display = "none";
-    alert("No questions added yet for this exam.");
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value.trim();
+  const errorBox = document.getElementById("loginError");
+
+  // ADMIN LOGIN
+  if (email === adminCredentials.email && password === adminCredentials.password) {
+    localStorage.setItem("loggedInUser", "ADMIN");
+    window.location.href = "admin.html";
     return;
   }
 
-  const randomIndex = Math.floor(Math.random() * examQuestions.length);
-  currentQuestion = examQuestions[randomIndex];
+  // NORMAL USER LOGIN
+  const user = userList.find(
+    (u) => u.email === email && u.password === password
+  );
 
-  // Display question
-  questionText.textContent = currentQuestion.question;
+  if (!user) {
+    errorBox.textContent = "Invalid email or password!";
+    return;
+  }
 
-  // Display options
-  optionsContainer.innerHTML = "";
-  currentQuestion.options.forEach((opt, index) => {
-    const wrapper = document.createElement("div");
-    wrapper.className = "option-item";
+  localStorage.setItem("loggedInUser", email);
+  window.location.href = "index.html";
+}
 
-    const input = document.createElement("input");
-    input.type = "radio";
-    input.name = "quizOption";
-    input.value = index;
-    input.id = `option-${index}`;
+//-------------------------------------------------------------
+// 3. PROTECT USER PAGES
+//-------------------------------------------------------------
+function protectUserPages() {
+  const requiredUser = document.body.getAttribute("data-protected");
 
-    const label = document.createElement("label");
-    label.htmlFor = input.id;
-    label.textContent = opt;
+  if (!requiredUser) return;
 
-    wrapper.appendChild(input);
-    wrapper.appendChild(label);
-    optionsContainer.appendChild(wrapper);
+  const logged = localStorage.getItem("loggedInUser");
+
+  if (!logged || logged === "ADMIN") {
+    window.location.href = "login.html";
+  }
+}
+
+//-------------------------------------------------------------
+// 4. PROTECT ADMIN PAGE
+//-------------------------------------------------------------
+function protectAdminPages() {
+  const isAdminPage = document.body.getAttribute("data-admin");
+
+  if (!isAdminPage) return;
+
+  const logged = localStorage.getItem("loggedInUser");
+
+  if (logged !== "ADMIN") {
+    window.location.href = "login.html";
+  }
+}
+
+//-------------------------------------------------------------
+// 5. LOGOUT
+//-------------------------------------------------------------
+function logout() {
+  localStorage.removeItem("loggedInUser");
+  window.location.href = "login.html";
+}
+
+//-------------------------------------------------------------
+// 6. ADMIN PANEL — ADD USER
+//-------------------------------------------------------------
+function addUser() {
+  const email = document.getElementById("newUserEmail").value.trim();
+  const password = document.getElementById("newUserPassword").value.trim();
+
+  if (!email || !password) {
+    alert("Enter email and password!");
+    return;
+  }
+
+  // Check duplicate
+  if (userList.some((u) => u.email === email)) {
+    alert("User already exists!");
+    return;
+  }
+
+  userList.push({ email, password });
+  saveUsers();
+  loadUserTable();
+
+  document.getElementById("newUserEmail").value = "";
+  document.getElementById("newUserPassword").value = "";
+}
+
+//-------------------------------------------------------------
+// 7. ADMIN PANEL — DELETE USER
+//-------------------------------------------------------------
+function deleteUser(email) {
+  userList = userList.filter((u) => u.email !== email);
+  saveUsers();
+  loadUserTable();
+}
+
+//-------------------------------------------------------------
+// 8. LOAD USER TABLE IN ADMIN PANEL
+//-------------------------------------------------------------
+function loadUserTable() {
+  const tableBody = document.querySelector("#userTable tbody");
+  if (!tableBody) return;
+
+  tableBody.innerHTML = "";
+
+  userList.forEach((u) => {
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td>${u.email}</td>
+      <td>${u.password}</td>
+      <td><button onclick="deleteUser('${u.email}')">Delete</button></td>
+    `;
+    tableBody.appendChild(row);
   });
-
-  feedback.textContent = "";
-  feedback.className = "feedback";
-  quizCard.style.display = "block";
 }
 
-// Check the selected answer
-function checkAnswer() {
-  if (!currentQuestion) return;
+//-------------------------------------------------------------
+// 9. INIT ON PAGE LOAD
+//-------------------------------------------------------------
+document.addEventListener("DOMContentLoaded", () => {
+  const loginForm = document.getElementById("loginForm");
+  if (loginForm) loginForm.addEventListener("submit", handleLogin);
 
-  const selected = document.querySelector('input[name="quizOption"]:checked');
-  if (!selected) {
-    alert("Please select an option.");
-    return;
-  }
+  const logoutBtn = document.getElementById("logoutBtn");
+  if (logoutBtn) logoutBtn.addEventListener("click", logout);
 
-  const selectedIndex = parseInt(selected.value, 10);
+  const addUserBtn = document.getElementById("addUserBtn");
+  if (addUserBtn) addUserBtn.addEventListener("click", addUser);
 
-  if (selectedIndex === currentQuestion.answerIndex) {
-    feedback.textContent = "Correct! " + currentQuestion.explanation;
-    feedback.className = "feedback correct";
-  } else {
-    const correctText = currentQuestion.options[currentQuestion.answerIndex];
-    feedback.textContent =
-      "Incorrect. Correct answer: " +
-      correctText +
-      ". " +
-      currentQuestion.explanation;
-    feedback.className = "feedback incorrect";
-  }
-}
-
-// Attach event listeners
-if (loadQuestionBtn) {
-  loadQuestionBtn.addEventListener("click", loadQuestion);
-}
-
-if (checkAnswerBtn) {
-  checkAnswerBtn.addEventListener("click", checkAnswer);
-}
-
-// Optional: load one question on first visit
-// window.addEventListener("load", loadQuestion);
+  protectUserPages();
+  protectAdminPages();
+  loadUserTable();
+});
