@@ -1,1189 +1,1327 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Banking Prep Admin Panel</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <style>
-    * {
-      box-sizing: border-box;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-        sans-serif;
-    }
-    body {
-      margin: 0;
-      padding: 0;
-      background: #0b1020;
-      color: #f5f7ff;
-    }
-    header {
-      background: linear-gradient(120deg, #1c2750, #233264, #1c2750);
-      padding: 1rem 2rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-      position: sticky;
-      top: 0;
-      z-index: 10;
-    }
-    header h1 {
-      margin: 0;
-      font-size: 1.3rem;
-      letter-spacing: 0.04em;
-    }
-    header span {
-      font-size: 0.8rem;
-      color: #b8c4ff;
-    }
-    .tag {
-      display: inline-block;
-      padding: 0.22rem 0.6rem;
-      border-radius: 999px;
-      font-size: 0.72rem;
-      background: rgba(0, 255, 204, 0.12);
-      color: #55ffc5;
-      border: 1px solid rgba(0, 255, 204, 0.3);
-      margin-left: 0.75rem;
-    }
-    .container {
-      max-width: 1200px;
-      margin: 1.5rem auto 2.5rem;
-      padding: 0 1.25rem;
-    }
-    .grid {
-      display: grid;
-      grid-template-columns: minmax(0, 1.5fr) minmax(0, 1.5fr);
-      gap: 1.25rem;
-    }
-    @media (max-width: 900px) {
-      .grid {
-        grid-template-columns: minmax(0, 1fr);
-      }
-    }
-    .card {
-      background: radial-gradient(circle at top left, #24325c, #15192b);
-      border-radius: 16px;
-      padding: 1rem 1.1rem 1.1rem;
-      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
-      border: 1px solid rgba(255, 255, 255, 0.07);
-    }
-    .card h2 {
-      margin: 0 0 0.25rem;
-      font-size: 1.1rem;
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-    }
-    .card h3 {
-      margin: 0.3rem 0 0.3rem;
-      font-size: 0.98rem;
-    }
-    .pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.25rem;
-      font-size: 0.7rem;
-      padding: 0.18rem 0.5rem;
-      border-radius: 999px;
-      background: rgba(99, 179, 255, 0.14);
-      color: #c3d9ff;
-    }
-    .pill span {
-      font-size: 0.6rem;
-      opacity: 0.9;
-    }
-    p.section-note {
-      margin: 0 0 0.7rem;
-      font-size: 0.8rem;
-      color: #a8b4ff;
-    }
-    form {
-      margin-bottom: 0.75rem;
-      padding: 0.6rem 0.7rem;
-      border-radius: 12px;
-      background: rgba(5, 7, 18, 0.45);
-      border: 1px dashed rgba(255, 255, 255, 0.08);
-    }
-    label {
-      display: block;
-      font-size: 0.75rem;
-      margin-bottom: 0.1rem;
-      color: #d7ddff;
-    }
-    input,
-    select,
-    textarea {
-      width: 100%;
-      padding: 0.38rem 0.5rem;
-      margin-bottom: 0.35rem;
-      border-radius: 8px;
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      background: rgba(3, 5, 15, 0.9);
-      color: #f5f7ff;
-      font-size: 0.78rem;
-      outline: none;
-    }
-    input:focus,
-    select:focus,
-    textarea:focus {
-      border-color: #65d9ff;
-      box-shadow: 0 0 0 1px rgba(101, 217, 255, 0.4);
-    }
-    textarea {
-      resize: vertical;
-      min-height: 50px;
-      max-height: 200px;
-    }
-    .btn-row {
-      display: flex;
-      gap: 0.5rem;
-      flex-wrap: wrap;
-      margin-top: 0.1rem;
-    }
-    button {
-      border: none;
-      border-radius: 999px;
-      padding: 0.35rem 0.9rem;
-      font-size: 0.78rem;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.3rem;
-    }
-    .btn-primary {
-      background: linear-gradient(135deg, #4ad4ff, #00ffbf);
-      color: #04101b;
-      font-weight: 600;
-    }
-    .btn-secondary {
-      background: rgba(255, 255, 255, 0.08);
-      color: #dbe2ff;
-    }
-    .btn-danger {
-      background: rgba(255, 77, 109, 0.18);
-      color: #ff9ea9;
-    }
-    .btn-sm {
-      padding: 0.18rem 0.6rem;
-      font-size: 0.7rem;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 0.3rem;
-      font-size: 0.76rem;
-    }
-    th,
-    td {
-      padding: 0.3rem 0.4rem;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-      vertical-align: top;
-    }
-    th {
-      text-align: left;
-      font-size: 0.7rem;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      color: #aab7ff;
-      background: rgba(10, 17, 42, 0.9);
-      position: sticky;
-      top: 0;
-      z-index: 1;
-    }
-    tbody tr:nth-child(even) {
-      background: rgba(255, 255, 255, 0.02);
-    }
-    .badge {
-      display: inline-block;
-      padding: 0.04rem 0.4rem;
-      border-radius: 999px;
-      font-size: 0.65rem;
-      background: rgba(0, 255, 204, 0.1);
-      color: #8cffdf;
-    }
-    .muted {
-      color: #7f8acd;
-      font-size: 0.72rem;
-    }
-    .two-col {
-      display: flex;
-      gap: 0.55rem;
-      flex-wrap: wrap;
-    }
-    .two-col > div {
-      flex: 1 1 120px;
-    }
-    .smallhint {
-      font-size: 0.7rem;
-      color: #98a4ff;
-      margin: 0 0 0.25rem;
-    }
-  </style>
+  <meta charset="UTF-8" />
+  <title>Banking Prep Admin Panel</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        sans-serif;
+    }
+    body {
+      margin: 0;
+      padding: 0;
+      background: #0b1020;
+      color: #f5f7ff;
+    }
+    header {
+      background: linear-gradient(120deg, #1c2750, #233264, #1c2750);
+      padding: 1rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 1.3rem;
+      letter-spacing: 0.04em;
+    }
+    header span {
+      font-size: 0.8rem;
+      color: #b8c4ff;
+    }
+    .tag {
+      display: inline-block;
+      padding: 0.22rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      background: rgba(0, 255, 204, 0.12);
+      color: #55ffc5;
+      border: 1px solid rgba(0, 255, 204, 0.3);
+      margin-left: 0.75rem;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 1.5rem auto 2.5rem;
+      padding: 0 1.25rem;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.5fr) minmax(0, 1.5fr);
+      gap: 1.25rem;
+    }
+    @media (max-width: 900px) {
+      .grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+    .card {
+      background: radial-gradient(circle at top left, #24325c, #15192b);
+      border-radius: 16px;
+      padding: 1rem 1.1rem 1.1rem;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+    }
+    .card h2 {
+      margin: 0 0 0.25rem;
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .card h3 {
+      margin: 0.3rem 0 0.3rem;
+      font-size: 0.98rem;
+    }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      font-size: 0.7rem;
+      padding: 0.18rem 0.5rem;
+      border-radius: 999px;
+      background: rgba(99, 179, 255, 0.14);
+      color: #c3d9ff;
+    }
+    .pill span {
+      font-size: 0.6rem;
+      opacity: 0.9;
+    }
+    p.section-note {
+      margin: 0 0 0.7rem;
+      font-size: 0.8rem;
+      color: #a8b4ff;
+    }
+    form {
+      margin-bottom: 0.75rem;
+      padding: 0.6rem 0.7rem;
+      border-radius: 12px;
+      background: rgba(5, 7, 18, 0.45);
+      border: 1px dashed rgba(255, 255, 255, 0.08);
+    }
+    label {
+      display: block;
+      font-size: 0.75rem;
+      margin-bottom: 0.1rem;
+      color: #d7ddff;
+    }
+    input,
+    select,
+    textarea {
+      width: 100%;
+      padding: 0.38rem 0.5rem;
+      margin-bottom: 0.35rem;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(3, 5, 15, 0.9);
+      color: #f5f7ff;
+      font-size: 0.78rem;
+      outline: none;
+    }
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: #65d9ff;
+      box-shadow: 0 0 0 1px rgba(101, 217, 255, 0.4);
+    }
+    textarea {
+      resize: vertical;
+      min-height: 50px;
+      max-height: 200px;
+    }
+    .btn-row {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-top: 0.1rem;
+    }
+    button {
+      border: none;
+      border-radius: 999px;
+      padding: 0.35rem 0.9rem;
+      font-size: 0.78rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #4ad4ff, #00ffbf);
+      color: #04101b;
+      font-weight: 600;
+    }
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.08);
+      color: #dbe2ff;
+    }
+    .btn-danger {
+      background: rgba(255, 77, 109, 0.18);
+      color: #ff9ea9;
+    }
+    .btn-sm {
+      padding: 0.18rem 0.6rem;
+      font-size: 0.7rem;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 0.3rem;
+      font-size: 0.76rem;
+    }
+    th,
+    td {
+      padding: 0.3rem 0.4rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      vertical-align: top;
+    }
+    th {
+      text-align: left;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: #aab7ff;
+      background: rgba(10, 17, 42, 0.9);
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+    tbody tr:nth-child(even) {
+      background: rgba(255, 255, 255, 0.02);
+    }
+    .badge {
+      display: inline-block;
+      padding: 0.04rem 0.4rem;
+      border-radius: 999px;
+      font-size: 0.65rem;
+      background: rgba(0, 255, 204, 0.1);
+      color: #8cffdf;
+    }
+    .muted {
+      color: #7f8acd;
+      font-size: 0.72rem;
+    }
+    .two-col {
+      display: flex;
+      gap: 0.55rem;
+      flex-wrap: wrap;
+    }
+    .two-col > div {
+      flex: 1 1 120px;
+    }
+    .smallhint {
+      font-size: 0.7rem;
+      color: #98a4ff;
+      margin: 0 0 0.25rem;
+    }
+  </style>
 </head>
 <body>
-  <header>
-    <div>
-      <h1>
-        JAIIB / CAIIB Admin
-        <span class="tag">Banking Prep Control Panel</span>
-      </h1>
-      <span>Manage subjects, modules, topics, and quizzes (all stored in your
-        browser via localStorage).</span>
-    </div>
-  </header>
+  <header>
+    <div>
+      <h1>
+        JAIIB / CAIIB Admin
+        <span class="tag">Banking Prep Control Panel</span>
+      </h1>
+      <span>Manage subjects, modules, topics, quizzes, and **users** (all stored in your
+        browser via localStorage).</span>
+    </div>
+  </header>
 
-  <div class="container">
-    <div class="grid">
-      <!-- SUBJECTS & MODULES -->
-      <div class="card">
-        <h2>
-          Subjects & Modules
-          <span class="pill"><span>JAIIB / CAIIB</span> structure</span>
-        </h2>
-        <p class="section-note">
-          Define subjects (e.g. <b>JAIIB-IEIFS</b>) and their modules
-          (Module A/B/C/D). Notes and quizzes will link to these.
-        </p>
+  <div class="container">
+    <div class="grid">
+            <div class="card">
+        <h2>
+          Subjects & Modules
+          <span class="pill"><span>JAIIB / CAIIB</span> structure</span>
+        </h2>
+        <p class="section-note">
+          Define subjects (e.g. <b>JAIIB-IEIFS</b>) and their modules
+          (Module A/B/C/D). Notes and quizzes will link to these.
+        </p>
 
-        <div class="two-col">
-          <!-- Subject form -->
-          <div>
-            <h3>Add / Edit Subject</h3>
-            <form id="subjectForm">
-              <label>Subject Code (unique)</label>
-              <input
-                id="subjectCode"
-                type="text"
-                placeholder="JAIIB-IEIFS"
-                required
-              />
-              <label>Subject Name</label>
-              <input
-                id="subjectName"
-                type="text"
-                placeholder="JAIIB – Indian Economy & Indian Financial System"
-                required
-              />
-              <label>Level (optional)</label>
-              <input id="subjectLevel" type="text" placeholder="JAIIB / CAIIB" />
-              <div class="btn-row">
-                <button type="submit" class="btn-primary">
-                  Save Subject
-                </button>
-              </div>
-              <p class="smallhint">
-                Existing student pages should use the same subject code (e.g.
-                <b>JAIIB-IEIFS</b>).
-              </p>
-            </form>
-          </div>
+        <div class="two-col">
+                    <div>
+            <h3>Add / Edit Subject</h3>
+            <form id="subjectForm">
+              <label>Subject Code (unique)</label>
+              <input
+                id="subjectCode"
+                type="text"
+                placeholder="JAIIB-IEIFS"
+                required
+              />
+              <label>Subject Name</label>
+              <input
+                id="subjectName"
+                type="text"
+                placeholder="JAIIB – Indian Economy & Indian Financial System"
+                required
+              />
+              <label>Level (optional)</label>
+              <input id="subjectLevel" type="text" placeholder="JAIIB / CAIIB" />
+              <div class="btn-row">
+                <button type="submit" class="btn-primary">
+                  Save Subject
+                </button>
+              </div>
+              <p class="smallhint">
+                Existing student pages should use the same subject code (e.g.
+                <b>JAIIB-IEIFS</b>).
+              </p>
+            </form>
+          </div>
 
-          <!-- Module form -->
-          <div>
-            <h3>Add Module</h3>
-            <form id="moduleForm">
-              <label>Subject</label>
-              <select id="moduleSubject" required></select>
-              <label>Module Code</label>
-              <input
-                id="moduleCode"
-                type="text"
-                placeholder="Module A"
-                required
-              />
-              <label>Module Name</label>
-              <input
-                id="moduleName"
-                type="text"
-                placeholder="Indian Economy"
-                required
-              />
-              <div class="btn-row">
-                <button type="submit" class="btn-primary">Save Module</button>
-              </div>
-            </form>
-          </div>
-        </div>
+                    <div>
+            <h3>Add Module</h3>
+            <form id="moduleForm">
+              <label>Subject</label>
+              <select id="moduleSubject" required></select>
+              <label>Module Code</label>
+              <input
+                id="moduleCode"
+                type="text"
+                placeholder="Module A"
+                required
+              />
+              <label>Module Name</label>
+              <input
+                id="moduleName"
+                type="text"
+                placeholder="Indian Economy"
+                required
+              />
+              <div class="btn-row">
+                <button type="submit" class="btn-primary">Save Module</button>
+              </div>
+            </form>
+          </div>
+        </div>
 
-        <h3>All Subjects</h3>
-        <table>
-          <thead>
-            <tr>
-              <th style="width: 90px">Code</th>
-              <th>Name</th>
-              <th style="width: 90px">Level</th>
-              <th style="width: 70px">Actions</th>
-            </tr>
-          </thead>
-          <tbody id="subjectTableBody"></tbody>
-        </table>
+        <h3>All Subjects</h3>
+        <table>
+          <thead>
+            <tr>
+              <th style="width: 90px">Code</th>
+              <th>Name</th>
+              <th style="width: 90px">Level</th>
+              <th style="width: 70px">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="subjectTableBody"></tbody>
+        </table>
 
-        <h3 style="margin-top: 0.8rem">All Modules</h3>
-        <table>
-          <thead>
-            <tr>
-              <th>Subject</th>
-              <th style="width: 90px">Code</th>
-              <th>Name</th>
-              <th style="width: 70px">Actions</th>
-            </tr>
-          </thead>
-          <tbody id="moduleTableBody"></tbody>
-        </table>
-      </div>
+        <h3 style="margin-top: 0.8rem">All Modules</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Subject</th>
+              <th style="width: 90px">Code</th>
+              <th>Name</th>
+              <th style="width: 70px">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="moduleTableBody"></tbody>
+        </table>
+      </div>
 
-      <!-- NOTES / TOPICS -->
-      <div class="card">
-        <h2>
-          Study Notes / Topics
-          <span class="pill"><span>indexed by</span> Subject &amp; Module</span>
-        </h2>
-        <p class="section-note">
-          Create topic-wise notes (e.g. <b>CSR in Companies Act</b>) mapped to
-          a paper and module. Students will read these on their dashboard.
-        </p>
+            <div class="card">
+        <h2>
+          Study Notes / Topics
+          <span class="pill"><span>indexed by</span> Subject &amp; Module</span>
+        </h2>
+        <p class="section-note">
+          Create topic-wise notes (e.g. <b>CSR in Companies Act</b>) mapped to
+          a paper and module. Students will read these on their dashboard.
+        </p>
 
-        <form id="noteForm">
-          <input type="hidden" id="noteId" />
-          <div class="two-col">
-            <div>
-              <label>Subject</label>
-              <select id="notePaper" required></select>
-            </div>
-            <div>
-              <label>Module</label>
-              <select id="noteModule">
-                <option value="">All / Not Applicable</option>
-              </select>
-            </div>
-          </div>
+        <form id="noteForm">
+          <input type="hidden" id="noteId" />
+          <div class="two-col">
+            <div>
+              <label>Subject</label>
+              <select id="notePaper" required></select>
+            </div>
+            <div>
+              <label>Module</label>
+              <select id="noteModule">
+                <option value="">All / Not Applicable</option>
+              </select>
+            </div>
+          </div>
 
-          <label>Topic Title</label>
-          <input
-            id="noteTitle"
-            type="text"
-            placeholder="CSR: Section 135 – Key Rules"
-            required
-          />
+          <label>Topic Title</label>
+          <input
+            id="noteTitle"
+            type="text"
+            placeholder="CSR: Section 135 – Key Rules"
+            required
+          />
 
-          <label>Content</label>
-          <textarea
-            id="noteContent"
-            rows="4"
-            placeholder="Short, exam-focused notes here..."
-          ></textarea>
+          <label>Content</label>
+          <textarea
+            id="noteContent"
+            rows="4"
+            placeholder="Short, exam-focused notes here..."
+          ></textarea>
 
-          <div class="btn-row">
-            <button type="submit" class="btn-primary">Save Note</button>
-            <button type="button" id="noteResetBtn" class="btn-secondary">
-              Clear
-            </button>
-          </div>
-        </form>
+          <div class="btn-row">
+            <button type="submit" class="btn-primary">Save Note</button>
+            <button type="button" id="noteResetBtn" class="btn-secondary">
+              Clear
+            </button>
+          </div>
+        </form>
 
-        <table>
-          <thead>
-            <tr>
-              <th>Subject</th>
-              <th>Module</th>
-              <th>Title</th>
-              <th style="width: 80px">Actions</th>
-            </tr>
-          </thead>
-          <tbody id="noteTableBody"></tbody>
-        </table>
-      </div>
-    </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Subject</th>
+              <th>Module</th>
+              <th>Title</th>
+              <th style="width: 80px">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="noteTableBody"></tbody>
+        </table>
+      </div>
+    </div>
 
-    <div class="grid" style="margin-top: 1.25rem">
-      <!-- QUIZZES -->
-      <div class="card">
-        <h2>
-          Quizzes / MCQs
-          <span class="pill"><span>with</span> Explanations</span>
-        </h2>
-        <p class="section-note">
-          Add MCQs mapped to a subject and module. You can store explanation so
-          students see <b>why</b> an answer is correct.
-        </p>
+    <div class="grid" style="margin-top: 1.25rem">
+            <div class="card">
+        <h2>
+          Quizzes / MCQs
+          <span class="pill"><span>with</span> Explanations</span>
+        </h2>
+        <p class="section-note">
+          Add MCQs mapped to a subject and module. You can store explanation so
+          students see <b>why</b> an answer is correct.
+        </p>
 
-        <form id="quizForm">
-          <input type="hidden" id="quizId" />
+        <form id="quizForm">
+          <input type="hidden" id="quizId" />
 
-          <div class="two-col">
-            <div>
-              <label>Subject</label>
-              <select id="quizPaper" required></select>
-            </div>
-            <div>
-              <label>Module</label>
-              <select id="quizModule">
-                <option value="">All / Not Applicable</option>
-              </select>
-            </div>
-          </div>
+          <div class="two-col">
+            <div>
+              <label>Subject</label>
+              <select id="quizPaper" required></select>
+            </div>
+            <div>
+              <label>Module</label>
+              <select id="quizModule">
+                <option value="">All / Not Applicable</option>
+              </select>
+            </div>
+          </div>
 
-          <label>Question</label>
-          <textarea
-            id="quizQuestion"
-            rows="2"
-            required
-            placeholder="Which of the following is NOT a feature of NSDL?"
-          ></textarea>
+          <label>Question</label>
+          <textarea
+            id="quizQuestion"
+            rows="2"
+            required
+            placeholder="Which of the following is NOT a feature of NSDL?"
+          ></textarea>
 
-          <label>Options (one per line)</label>
-          <textarea
-            id="quizOptions"
-            rows="3"
-            placeholder="Option 1&#10;Option 2&#10;Option 3&#10;Option 4"
-          ></textarea>
+          <label>Options (one per line)</label>
+          <textarea
+            id="quizOptions"
+            rows="3"
+            placeholder="Option 1&#10;Option 2&#10;Option 3&#10;Option 4"
+          ></textarea>
 
-          <label>Correct Option Index (0-based)</label>
-          <input id="quizAnswerIndex" type="number" min="0" value="0" />
+          <label>Correct Option Index (0-based)</label>
+          <input id="quizAnswerIndex" type="number" min="0" value="0" />
 
-          <label>Explanation (shown after answer)</label>
-          <textarea
-            id="quizExplanation"
-            rows="3"
-            placeholder="Short concept explanation, e.g. &#10;NSDL was promoted by IDBI, NSE and BSE, not UTI..."
-          ></textarea>
+          <label>Explanation (shown after answer)</label>
+          <textarea
+            id="quizExplanation"
+            rows="3"
+            placeholder="Short concept explanation, e.g. &#10;NSDL was promoted by IDBI, NSE and BSE, not UTI..."
+          ></textarea>
 
-          <div class="btn-row">
-            <button type="submit" class="btn-primary">Save Question</button>
-            <button type="button" id="quizResetBtn" class="btn-secondary">
-              Clear
-            </button>
-          </div>
-        </form>
+          <div class="btn-row">
+            <button type="submit" class="btn-primary">Save Question</button>
+            <button type="button" id="quizResetBtn" class="btn-secondary">
+              Clear
+            </button>
+          </div>
+        </form>
 
-        <table>
-          <thead>
-            <tr>
-              <th>Subject</th>
-              <th>Module</th>
-              <th>Question</th>
-              <th style="width: 90px">Actions</th>
-            </tr>
-          </thead>
-          <tbody id="quizTableBody"></tbody>
-        </table>
-      </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Subject</th>
+              <th>Module</th>
+              <th>Question</th>
+              <th style="width: 90px">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="quizTableBody"></tbody>
+        </table>
+      </div>
 
-      <!-- BACKUP / INFO -->
-      <div class="card">
-        <h2>
-          Backup & Info
-          <span class="pill"><span>localStorage</span> based</span>
-        </h2>
-        <p class="section-note">
-          Everything you add here is stored in this browser only
-          (<b>localStorage</b>). You can export JSON and import later or on
-          another machine.
-        </p>
+            <div class="card">
+        <h2>
+          User Management
+          <span class="pill"><span>App</span> Access</span>
+        </h2>
+        <p class="section-note">
+          Add, view, and remove student or admin users from the platform.
+          (Stored in <b>localStorage</b>).
+        </p>
 
-        <h3>Backup JSON</h3>
-        <p class="smallhint">
-          This will include <b>subjects, modules, notes, quizzes</b>.
-        </p>
-        <div class="btn-row">
-          <button id="exportBtn" class="btn-secondary">
-            Download Backup JSON
-          </button>
-          <label
-            class="btn-secondary"
-            style="cursor: pointer; position: relative; overflow: hidden;"
-          >
-            Import JSON
-            <input
-              type="file"
-              id="importFile"
-              accept="application/json"
-              style="position:absolute;left:0;top:0;opacity:0;width:100%;height:100%;cursor:pointer;"
-            />
-          </label>
-        </div>
+        <h3>Add New User</h3>
+        <form id="userForm">
+          <label>Full Name</label>
+          <input
+            id="userName"
+            type="text"
+            placeholder="John Doe"
+            required
+          />
+          <label>Email (unique ID)</label>
+          <input
+            id="userEmail"
+            type="email"
+            placeholder="john.doe@example.com"
+            required
+          />
+          <label>Role</label>
+          <select id="userRole" required>
+            <option value="student">Student</option>
+            <option value="admin">Admin</option>
+            <option value="guest">Guest</option>
+          </select>
+          <div class="btn-row">
+            <button type="submit" class="btn-primary">Add User</button>
+          </div>
+        </form>
 
-        <p class="smallhint" style="margin-top: 0.8rem;">
-          Tip: Keep subject code for IE&IFS exactly
-          <b>JAIIB-IEIFS</b> so it matches the 100 MCQs JSON you already
-          created.
-        </p>
+        <h3>All Users</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th style="width: 70px">Role</th>
+              <th style="width: 70px">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="userTableBody"></tbody>
+        </table>
 
-        <h3 style="margin-top: 1rem;">Storage Keys</h3>
-        <ul class="muted">
-          <li><code>bp_subjects</code> – subjects</li>
-          <li><code>bp_modules</code> – modules</li>
-          <li><code>bp_notes</code> – notes / topics</li>
-          <li><code>bp_quizzes</code> – MCQs + explanations</li>
-        </ul>
-      </div>
-    </div>
-  </div>
+      </div>
+    </div>
+  
+    <div class="grid" style="margin-top: 1.25rem">
+            <div class="card" style="grid-column: 1 / -1;">
+        <h2>
+          Backup & Info
+          <span class="pill"><span>localStorage</span> based</span>
+        </h2>
+        <p class="section-note">
+          Everything you add here is stored in this browser only
+          (<b>localStorage</b>). You can export JSON and import later or on
+          another machine.
+        </p>
 
-  <script>
-    // ========= BASIC STORAGE HELPERS =========
-    const STORAGE_KEYS = {
-      SUBJECTS: "bp_subjects",
-      MODULES: "bp_modules",
-      NOTES: "bp_notes",
-      QUIZZES: "bp_quizzes"
-    };
+        <h3>Backup JSON</h3>
+        <p class="smallhint">
+          This will include <b>subjects, modules, notes, quizzes, and users</b>.
+        </p>
+        <div class="btn-row">
+          <button id="exportBtn" class="btn-secondary">
+            Download Backup JSON
+          </button>
+          <label
+            class="btn-secondary"
+            style="cursor: pointer; position: relative; overflow: hidden;"
+          >
+            Import JSON
+            <input
+              type="file"
+              id="importFile"
+              accept="application/json"
+              style="position:absolute;left:0;top:0;opacity:0;width:100%;height:100%;cursor:pointer;"
+            />
+          </label>
+        </div>
 
-    function loadData(key, fallback) {
-      try {
-        const raw = localStorage.getItem(key);
-        if (!raw) return fallback;
-        return JSON.parse(raw);
-      } catch (e) {
-        console.error("Error loading", key, e);
-        return fallback;
-      }
+        <p class="smallhint" style="margin-top: 0.8rem;">
+          Tip: Keep subject code for IE&IFS exactly
+          <b>JAIIB-IEIFS</b> so it matches the 100 MCQs JSON you already
+          created.
+        </p>
+
+        <h3 style="margin-top: 1rem;">Storage Keys</h3>
+        <ul class="muted">
+          <li><code>bp_subjects</code> – subjects</li>
+          <li><code>bp_modules</code> – modules</li>
+          <li><code>bp_notes</code> – notes / topics</li>
+          <li><code>bp_quizzes</code> – MCQs + explanations</li>
+          <li><code>bp_users</code> – users / access control **(NEW)**</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ========= BASIC STORAGE HELPERS =========
+    const STORAGE_KEYS = {
+      SUBJECTS: "bp_subjects",
+      MODULES: "bp_modules",
+      NOTES: "bp_notes",
+      QUIZZES: "bp_quizzes",
+      USERS: "bp_users" // NEW KEY
+    };
+
+    function loadData(key, fallback) {
+      try {
+        const raw = localStorage.getItem(key);
+        if (!raw) return fallback;
+        return JSON.parse(raw);
+      } catch (e) {
+        console.error("Error loading", key, e);
+        return fallback;
+      }
+    }
+
+    function saveData(key, value) {
+      localStorage.setItem(key, JSON.stringify(value));
+    }
+
+    function generateId(prefix) {
+      return (
+        prefix +
+        "_" +
+        Math.random().toString(36).slice(2, 8) +
+        Date.now().toString(36)
+      );
+    }
+
+    // ========= SUBJECTS & MODULES (UNMODIFIED) =========
+    function getSubjects() {
+      return loadData(STORAGE_KEYS.SUBJECTS, []);
+    }
+    function saveSubjects(subjects) {
+      saveData(STORAGE_KEYS.SUBJECTS, subjects);
+    }
+
+    function getModules() {
+      return loadData(STORAGE_KEYS.MODULES, []);
+    }
+    function saveModules(modules) {
+      saveData(STORAGE_KEYS.MODULES, modules);
+    }
+
+    function getModulesForSubject(subjectCode) {
+      return getModules().filter((m) => m.subjectCode === subjectCode);
+    }
+
+    function ensureDefaultSubjectsAndModules() {
+      let subjects = getSubjects();
+      let modules = getModules();
+
+      if (!subjects.length) {
+        subjects = [
+          {
+            id: generateId("subj"),
+            code: "JAIIB-IEIFS",
+            name: "JAIIB – Indian Economy & Indian Financial System",
+            level: "JAIIB"
+          },
+          {
+            id: generateId("subj"),
+            code: "JAIIB-PPB",
+            name: "JAIIB – Principles & Practices of Banking",
+            level: "JAIIB"
+          },
+          {
+            id: generateId("subj"),
+            code: "JAIIB-AFB",
+            name: "JAIIB – Accounting & Financial Management",
+            level: "JAIIB"
+          }
+        ];
+        saveSubjects(subjects);
+      }
+
+      if (!modules.length) {
+        const ieifs = "JAIIB-IEIFS";
+        modules = [
+          {
+            id: generateId("mod"),
+            subjectCode: ieifs,
+            code: "Module A",
+            name: "Indian Economy"
+          },
+          {
+            id: generateId("mod"),
+            subjectCode: ieifs,
+            code: "Module B",
+            name: "Economic Concepts Related to Banking"
+          },
+          {
+            id: generateId("mod"),
+            subjectCode: ieifs,
+            code: "Module C",
+            name: "Indian Financial Architecture"
+          },
+          {
+            id: generateId("mod"),
+            subjectCode: ieifs,
+            code: "Module D",
+            name: "Financial Markets & Services"
+          }
+        ];
+        saveModules(modules);
+      }
+    }
+
+    function renderSubjects() {
+      const tbody = document.getElementById("subjectTableBody");
+      const subjects = getSubjects();
+      if (!tbody) return;
+      tbody.innerHTML = "";
+
+      subjects.forEach((s) => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td><span class="badge">${s.code}</span></td>
+          <td>${s.name}</td>
+          <td>${s.level || "-"}</td>
+          <td>
+            <button class="btn-sm btn-danger" data-id="${s.id}">
+              Delete
+            </button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      tbody
+        .querySelectorAll("button[data-id]")
+        .forEach((btn) =>
+          btn.addEventListener("click", () => deleteSubject(btn.dataset.id))
+        );
+
+      // Also refresh selects for notes & quizzes
+      fillSubjectSelects();
+    }
+
+    function deleteSubject(id) {
+      if (!confirm("Delete this subject? Existing notes and quizzes will still reference its code.")) {
+        return;
+      }
+      let subjects = getSubjects();
+      subjects = subjects.filter((s) => s.id !== id);
+      saveSubjects(subjects);
+      renderSubjects();
+      renderModulesAdmin();
+    }
+
+    function handleSubjectForm(e) {
+      e.preventDefault();
+      const codeEl = document.getElementById("subjectCode");
+      const nameEl = document.getElementById("subjectName");
+      const levelEl = document.getElementById("subjectLevel");
+
+      const code = codeEl.value.trim();
+      const name = nameEl.value.trim();
+      const level = levelEl.value.trim();
+
+      if (!code || !name) return;
+
+      let subjects = getSubjects();
+      if (subjects.some((s) => s.code === code)) {
+        alert("A subject with this code already exists.");
+        return;
+      }
+
+      subjects.push({
+        id: generateId("subj"),
+        code,
+        name,
+        level
+      });
+
+      saveSubjects(subjects);
+      codeEl.value = "";
+      nameEl.value = "";
+      levelEl.value = "";
+      renderSubjects();
+    }
+
+    function renderModulesAdmin() {
+      const tbody = document.getElementById("moduleTableBody");
+      const subjectSelect = document.getElementById("moduleSubject");
+      const subjects = getSubjects();
+      const modules = getModules();
+      if (!tbody || !subjectSelect) return;
+
+      // subject dropdown for module form
+      subjectSelect.innerHTML = "";
+      subjects.forEach((s) => {
+        const opt = document.createElement("option");
+        opt.value = s.code;
+        opt.textContent = s.name;
+        subjectSelect.appendChild(opt);
+      });
+
+      // table
+      tbody.innerHTML = "";
+      modules.forEach((m) => {
+        const subj = subjects.find((s) => s.code === m.subjectCode);
+        const subjName = subj ? subj.name : m.subjectCode;
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${subjName}</td>
+          <td><span class="badge">${m.code}</span></td>
+          <td>${m.name}</td>
+          <td>
+            <button class="btn-sm btn-danger" data-id="${m.id}">
+              Delete
+            </button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      tbody
+        .querySelectorAll("button[data-id]")
+        .forEach((btn) =>
+          btn.addEventListener("click", () => deleteModule(btn.dataset.id))
+        );
+
+      // Rebind subject->module selects for notes/quizzes
+      bindSubjectModuleLinking();
+    }
+
+    function deleteModule(id) {
+      if (!confirm("Delete this module?")) return;
+      let modules = getModules();
+      modules = modules.filter((m) => m.id !== id);
+      saveModules(modules);
+      renderModulesAdmin();
+    }
+
+    function handleModuleForm(e) {
+      e.preventDefault();
+      const subjectCode = document.getElementById("moduleSubject").value;
+      const code = document.getElementById("moduleCode").value.trim();
+      const name = document.getElementById("moduleName").value.trim();
+      if (!subjectCode || !code || !name) return;
+
+      let modules = getModules();
+      if (
+        modules.some(
+          (m) => m.subjectCode === subjectCode && m.code.toLowerCase() === code.toLowerCase()
+        )
+      ) {
+        alert("Module code already exists for this subject.");
+        return;
+      }
+
+      modules.push({
+        id: generateId("mod"),
+        subjectCode,
+        code,
+        name
+      });
+      saveModules(modules);
+      document.getElementById("moduleCode").value = "";
+      document.getElementById("moduleName").value = "";
+      renderModulesAdmin();
+    }
+
+    // ========= NOTES (UNMODIFIED) =========
+    function getNotes() {
+      return loadData(STORAGE_KEYS.NOTES, []);
+    }
+    function saveNotes(n) {
+      saveData(STORAGE_KEYS.NOTES, n);
+    }
+
+    function renderNotes() {
+      const tbody = document.getElementById("noteTableBody");
+      if (!tbody) return;
+      const notes = getNotes();
+      const subjects = getSubjects();
+
+      tbody.innerHTML = "";
+      notes.forEach((n) => {
+        const subj = subjects.find((s) => s.code === n.paper);
+        const subjName = subj ? subj.name : n.paper;
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${subjName}</td>
+          <td>${n.module || "-"}</td>
+          <td>${n.title}</td>
+          <td>
+            <button class="btn-sm btn-secondary" data-action="edit" data-id="${n.id}">
+              Edit
+            </button>
+            <button class="btn-sm btn-danger" data-action="delete" data-id="${n.id}">
+              Del
+            </button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      tbody.querySelectorAll("button").forEach((btn) => {
+        const id = btn.dataset.id;
+        const action = btn.dataset.action;
+        btn.addEventListener("click", () => {
+          if (action === "edit") loadNoteIntoForm(id);
+          else if (action === "delete") deleteNote(id);
+        });
+      });
+    }
+
+    function handleNoteForm(e) {
+      e.preventDefault();
+      let notes = getNotes();
+      const idEl = document.getElementById("noteId");
+      const paperEl = document.getElementById("notePaper");
+      const moduleEl = document.getElementById("noteModule");
+      const titleEl = document.getElementById("noteTitle");
+      const contentEl = document.getElementById("noteContent");
+
+      const id = idEl.value;
+      const paper = paperEl.value;
+      const module = moduleEl.value || "";
+      const title = titleEl.value.trim();
+      const content = contentEl.value.trim();
+
+      if (!paper || !title) return;
+
+      if (id) {
+        const n = notes.find((x) => x.id === id);
+        if (n) {
+          n.paper = paper;
+          n.module = module;
+          n.title = title;
+          n.content = content;
+        }
+      } else {
+        notes.push({
+          id: generateId("note"),
+          paper,
+          module,
+          title,
+          content
+        });
+      }
+
+      saveNotes(notes);
+      resetNoteForm();
+      renderNotes();
+    }
+
+    function loadNoteIntoForm(id) {
+      const notes = getNotes();
+      const n = notes.find((x) => x.id === id);
+      if (!n) return;
+      document.getElementById("noteId").value = n.id;
+      document.getElementById("notePaper").value = n.paper;
+      fillModuleSelectForSubject(n.paper, document.getElementById("noteModule"));
+      document.getElementById("noteModule").value = n.module || "";
+      document.getElementById("noteTitle").value = n.title;
+      document.getElementById("noteContent").value = n.content || "";
+    }
+
+    function deleteNote(id) {
+      if (!confirm("Delete this note?")) return;
+      let notes = getNotes();
+      notes = notes.filter((n) => n.id !== id);
+      saveNotes(notes);
+      renderNotes();
+    }
+
+    function resetNoteForm() {
+      document.getElementById("noteId").value = "";
+      document.getElementById("noteTitle").value = "";
+      document.getElementById("noteContent").value = "";
+    }
+
+    // ========= QUIZZES (UNMODIFIED) =========
+    function getQuizzes() {
+      return loadData(STORAGE_KEYS.QUIZZES, []);
+    }
+    function saveQuizzes(q) {
+      saveData(STORAGE_KEYS.QUIZZES, q);
+    }
+
+    function renderQuizzes() {
+      const tbody = document.getElementById("quizTableBody");
+      if (!tbody) return;
+      const quizzes = getQuizzes();
+      const subjects = getSubjects();
+      tbody.innerHTML = "";
+
+      quizzes.forEach((q) => {
+        const subj = subjects.find((s) => s.code === q.paper);
+        const subjName = subj ? subj.name : q.paper;
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${subjName}</td>
+          <td>${q.module || "-"}</td>
+          <td>${q.question}</td>
+          <td>
+            <button class="btn-sm btn-secondary" data-action="edit" data-id="${q.id}">
+              Edit
+            </button>
+            <button class="btn-sm btn-danger" data-action="delete" data-id="${q.id}">
+              Del
+            </button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      tbody.querySelectorAll("button").forEach((btn) => {
+        const id = btn.dataset.id;
+        const action = btn.dataset.action;
+        btn.addEventListener("click", () => {
+          if (action === "edit") loadQuizIntoForm(id);
+          else if (action === "delete") deleteQuiz(id);
+        });
+      });
+    }
+
+    function handleQuizForm(e) {
+      e.preventDefault();
+      let quizzes = getQuizzes();
+
+      const idEl = document.getElementById("quizId");
+      const paperEl = document.getElementById("quizPaper");
+      const moduleEl = document.getElementById("quizModule");
+      const qEl = document.getElementById("quizQuestion");
+      const optsEl = document.getElementById("quizOptions");
+      const ansEl = document.getElementById("quizAnswerIndex");
+      const explEl = document.getElementById("quizExplanation");
+
+      const id = idEl.value;
+      const paper = paperEl.value;
+      const module = moduleEl.value || "";
+      const question = qEl.value.trim();
+      const options = optsEl.value
+        .split("\n")
+        .map((x) => x.trim())
+        .filter(Boolean);
+      const answerIndex = parseInt(ansEl.value, 10) || 0;
+      const explanation = explEl.value.trim();
+
+      if (!paper || !question || !options.length) return;
+
+      if (id) {
+        const q = quizzes.find((x) => x.id === id);
+        if (q) {
+          q.paper = paper;
+          q.module = module;
+          q.question = question;
+          q.options = options;
+          q.answerIndex = answerIndex;
+          q.explanation = explanation;
+        }
+      } else {
+        quizzes.push({
+          id: generateId("quiz"),
+          paper,
+          module,
+          question,
+          options,
+          answerIndex,
+          explanation
+        });
+      }
+
+      saveQuizzes(quizzes);
+      resetQuizForm();
+      renderQuizzes();
+    }
+
+    function loadQuizIntoForm(id) {
+      const quizzes = getQuizzes();
+      const q = quizzes.find((x) => x.id === id);
+      if (!q) return;
+      document.getElementById("quizId").value = q.id;
+      document.getElementById("quizPaper").value = q.paper;
+      fillModuleSelectForSubject(q.paper, document.getElementById("quizModule"));
+      document.getElementById("quizModule").value = q.module || "";
+      document.getElementById("quizQuestion").value = q.question;
+      document.getElementById("quizOptions").value = (q.options || []).join(
+        "\n"
+      );
+      document.getElementById("quizAnswerIndex").value =
+        typeof q.answerIndex === "number" ? q.answerIndex : 0;
+      document.getElementById("quizExplanation").value = q.explanation || "";
+    }
+
+    function deleteQuiz(id) {
+      if (!confirm("Delete this question?")) return;
+      let quizzes = getQuizzes();
+      quizzes = quizzes.filter((q) => q.id !== id);
+      saveQuizzes(quizzes);
+      renderQuizzes();
+    }
+
+    function resetQuizForm() {
+      document.getElementById("quizId").value = "";
+      document.getElementById("quizQuestion").value = "";
+      document.getElementById("quizOptions").value = "";
+      document.getElementById("quizAnswerIndex").value = 0;
+      document.getElementById("quizModule").value = "";
+      document.getElementById("quizExplanation").value = "";
+    }
+
+    // ========= USERS (NEW FUNCTIONS) =========
+    function getUsers() {
+        return loadData(STORAGE_KEYS.USERS, []);
+    }
+    function saveUsers(u) {
+        saveData(STORAGE_KEYS.USERS, u);
     }
 
-    function saveData(key, value) {
-      localStorage.setItem(key, JSON.stringify(value));
-    }
+    function renderUsers() {
+        const tbody = document.getElementById("userTableBody");
+        if (!tbody) return;
+        const users = getUsers();
+        tbody.innerHTML = "";
 
-    function generateId(prefix) {
-      return (
-        prefix +
-        "_" +
-        Math.random().toString(36).slice(2, 8) +
-        Date.now().toString(36)
-      );
-    }
-
-    // ========= SUBJECTS & MODULES =========
-    function getSubjects() {
-      return loadData(STORAGE_KEYS.SUBJECTS, []);
-    }
-    function saveSubjects(subjects) {
-      saveData(STORAGE_KEYS.SUBJECTS, subjects);
-    }
-
-    function getModules() {
-      return loadData(STORAGE_KEYS.MODULES, []);
-    }
-    function saveModules(modules) {
-      saveData(STORAGE_KEYS.MODULES, modules);
-    }
-
-    function getModulesForSubject(subjectCode) {
-      return getModules().filter((m) => m.subjectCode === subjectCode);
-    }
-
-    function ensureDefaultSubjectsAndModules() {
-      let subjects = getSubjects();
-      let modules = getModules();
-
-      if (!subjects.length) {
-        subjects = [
-          {
-            id: generateId("subj"),
-            code: "JAIIB-IEIFS",
-            name: "JAIIB – Indian Economy & Indian Financial System",
-            level: "JAIIB"
-          },
-          {
-            id: generateId("subj"),
-            code: "JAIIB-PPB",
-            name: "JAIIB – Principles & Practices of Banking",
-            level: "JAIIB"
-          },
-          {
-            id: generateId("subj"),
-            code: "JAIIB-AFB",
-            name: "JAIIB – Accounting & Financial Management",
-            level: "JAIIB"
-          }
-        ];
-        saveSubjects(subjects);
-      }
-
-      if (!modules.length) {
-        const ieifs = "JAIIB-IEIFS";
-        modules = [
-          {
-            id: generateId("mod"),
-            subjectCode: ieifs,
-            code: "Module A",
-            name: "Indian Economy"
-          },
-          {
-            id: generateId("mod"),
-            subjectCode: ieifs,
-            code: "Module B",
-            name: "Economic Concepts Related to Banking"
-          },
-          {
-            id: generateId("mod"),
-            subjectCode: ieifs,
-            code: "Module C",
-            name: "Indian Financial Architecture"
-          },
-          {
-            id: generateId("mod"),
-            subjectCode: ieifs,
-            code: "Module D",
-            name: "Financial Markets & Services"
-          }
-        ];
-        saveModules(modules);
-      }
-    }
-
-    function renderSubjects() {
-      const tbody = document.getElementById("subjectTableBody");
-      const subjects = getSubjects();
-      if (!tbody) return;
-      tbody.innerHTML = "";
-
-      subjects.forEach((s) => {
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-          <td><span class="badge">${s.code}</span></td>
-          <td>${s.name}</td>
-          <td>${s.level || "-"}</td>
-          <td>
-            <button class="btn-sm btn-danger" data-id="${s.id}">
-              Delete
-            </button>
-          </td>
-        `;
-        tbody.appendChild(tr);
-      });
-
-      tbody
-        .querySelectorAll("button[data-id]")
-        .forEach((btn) =>
-          btn.addEventListener("click", () => deleteSubject(btn.dataset.id))
-        );
-
-      // Also refresh selects for notes & quizzes
-      fillSubjectSelects();
-    }
-
-    function deleteSubject(id) {
-      if (!confirm("Delete this subject? Existing notes and quizzes will still reference its code.")) {
-        return;
-      }
-      let subjects = getSubjects();
-      subjects = subjects.filter((s) => s.id !== id);
-      saveSubjects(subjects);
-      renderSubjects();
-      renderModulesAdmin();
-    }
-
-    function handleSubjectForm(e) {
-      e.preventDefault();
-      const codeEl = document.getElementById("subjectCode");
-      const nameEl = document.getElementById("subjectName");
-      const levelEl = document.getElementById("subjectLevel");
-
-      const code = codeEl.value.trim();
-      const name = nameEl.value.trim();
-      const level = levelEl.value.trim();
-
-      if (!code || !name) return;
-
-      let subjects = getSubjects();
-      if (subjects.some((s) => s.code === code)) {
-        alert("A subject with this code already exists.");
-        return;
-      }
-
-      subjects.push({
-        id: generateId("subj"),
-        code,
-        name,
-        level
-      });
-
-      saveSubjects(subjects);
-      codeEl.value = "";
-      nameEl.value = "";
-      levelEl.value = "";
-      renderSubjects();
-    }
-
-    function renderModulesAdmin() {
-      const tbody = document.getElementById("moduleTableBody");
-      const subjectSelect = document.getElementById("moduleSubject");
-      const subjects = getSubjects();
-      const modules = getModules();
-      if (!tbody || !subjectSelect) return;
-
-      // subject dropdown for module form
-      subjectSelect.innerHTML = "";
-      subjects.forEach((s) => {
-        const opt = document.createElement("option");
-        opt.value = s.code;
-        opt.textContent = s.name;
-        subjectSelect.appendChild(opt);
-      });
-
-      // table
-      tbody.innerHTML = "";
-      modules.forEach((m) => {
-        const subj = subjects.find((s) => s.code === m.subjectCode);
-        const subjName = subj ? subj.name : m.subjectCode;
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-          <td>${subjName}</td>
-          <td><span class="badge">${m.code}</span></td>
-          <td>${m.name}</td>
-          <td>
-            <button class="btn-sm btn-danger" data-id="${m.id}">
-              Delete
-            </button>
-          </td>
-        `;
-        tbody.appendChild(tr);
-      });
-
-      tbody
-        .querySelectorAll("button[data-id]")
-        .forEach((btn) =>
-          btn.addEventListener("click", () => deleteModule(btn.dataset.id))
-        );
-
-      // Rebind subject->module selects for notes/quizzes
-      bindSubjectModuleLinking();
-    }
-
-    function deleteModule(id) {
-      if (!confirm("Delete this module?")) return;
-      let modules = getModules();
-      modules = modules.filter((m) => m.id !== id);
-      saveModules(modules);
-      renderModulesAdmin();
-    }
-
-    function handleModuleForm(e) {
-      e.preventDefault();
-      const subjectCode = document.getElementById("moduleSubject").value;
-      const code = document.getElementById("moduleCode").value.trim();
-      const name = document.getElementById("moduleName").value.trim();
-      if (!subjectCode || !code || !name) return;
-
-      let modules = getModules();
-      if (
-        modules.some(
-          (m) => m.subjectCode === subjectCode && m.code.toLowerCase() === code.toLowerCase()
-        )
-      ) {
-        alert("Module code already exists for this subject.");
-        return;
-      }
-
-      modules.push({
-        id: generateId("mod"),
-        subjectCode,
-        code,
-        name
-      });
-      saveModules(modules);
-      document.getElementById("moduleCode").value = "";
-      document.getElementById("moduleName").value = "";
-      renderModulesAdmin();
-    }
-
-    // ========= NOTES =========
-    function getNotes() {
-      return loadData(STORAGE_KEYS.NOTES, []);
-    }
-    function saveNotes(n) {
-      saveData(STORAGE_KEYS.NOTES, n);
-    }
-
-    function renderNotes() {
-      const tbody = document.getElementById("noteTableBody");
-      if (!tbody) return;
-      const notes = getNotes();
-      const subjects = getSubjects();
-
-      tbody.innerHTML = "";
-      notes.forEach((n) => {
-        const subj = subjects.find((s) => s.code === n.paper);
-        const subjName = subj ? subj.name : n.paper;
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-          <td>${subjName}</td>
-          <td>${n.module || "-"}</td>
-          <td>${n.title}</td>
-          <td>
-            <button class="btn-sm btn-secondary" data-action="edit" data-id="${n.id}">
-              Edit
-            </button>
-            <button class="btn-sm btn-danger" data-action="delete" data-id="${n.id}">
-              Del
-            </button>
-          </td>
-        `;
-        tbody.appendChild(tr);
-      });
-
-      tbody.querySelectorAll("button").forEach((btn) => {
-        const id = btn.dataset.id;
-        const action = btn.dataset.action;
-        btn.addEventListener("click", () => {
-          if (action === "edit") loadNoteIntoForm(id);
-          else if (action === "delete") deleteNote(id);
+        users.forEach((u) => {
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
+                <td>${u.name}</td>
+                <td><span class="badge" style="background: rgba(255,193,7,0.1); color: #ffeb3b;">${u.email}</span></td>
+                <td>${u.role}</td>
+                <td>
+                    <button class="btn-sm btn-danger" data-id="${u.id}">
+                        Delete
+                    </button>
+                </td>
+            `;
+            tbody.appendChild(tr);
         });
-      });
+
+        tbody
+            .querySelectorAll("button[data-id]")
+            .forEach((btn) =>
+                btn.addEventListener("click", () => deleteUser(btn.dataset.id))
+            );
     }
 
-    function handleNoteForm(e) {
-      e.preventDefault();
-      let notes = getNotes();
-      const idEl = document.getElementById("noteId");
-      const paperEl = document.getElementById("notePaper");
-      const moduleEl = document.getElementById("noteModule");
-      const titleEl = document.getElementById("noteTitle");
-      const contentEl = document.getElementById("noteContent");
+    function handleUserForm(e) {
+        e.preventDefault();
+        const nameEl = document.getElementById("userName");
+        const emailEl = document.getElementById("userEmail");
+        const roleEl = document.getElementById("userRole");
 
-      const id = idEl.value;
-      const paper = paperEl.value;
-      const module = moduleEl.value || "";
-      const title = titleEl.value.trim();
-      const content = contentEl.value.trim();
+        const name = nameEl.value.trim();
+        const email = emailEl.value.trim();
+        const role = roleEl.value;
 
-      if (!paper || !title) return;
+        if (!name || !email || !role) return;
 
-      if (id) {
-        const n = notes.find((x) => x.id === id);
-        if (n) {
-          n.paper = paper;
-          n.module = module;
-          n.title = title;
-          n.content = content;
+        let users = getUsers();
+
+        // Basic email uniqueness check
+        if (users.some((u) => u.email.toLowerCase() === email.toLowerCase())) {
+            alert("A user with this email already exists.");
+            return;
         }
-      } else {
-        notes.push({
-          id: generateId("note"),
-          paper,
-          module,
-          title,
-          content
-        });
-      }
 
-      saveNotes(notes);
-      resetNoteForm();
-      renderNotes();
-    }
-
-    function loadNoteIntoForm(id) {
-      const notes = getNotes();
-      const n = notes.find((x) => x.id === id);
-      if (!n) return;
-      document.getElementById("noteId").value = n.id;
-      document.getElementById("notePaper").value = n.paper;
-      fillModuleSelectForSubject(n.paper, document.getElementById("noteModule"));
-      document.getElementById("noteModule").value = n.module || "";
-      document.getElementById("noteTitle").value = n.title;
-      document.getElementById("noteContent").value = n.content || "";
-    }
-
-    function deleteNote(id) {
-      if (!confirm("Delete this note?")) return;
-      let notes = getNotes();
-      notes = notes.filter((n) => n.id !== id);
-      saveNotes(notes);
-      renderNotes();
-    }
-
-    function resetNoteForm() {
-      document.getElementById("noteId").value = "";
-      document.getElementById("noteTitle").value = "";
-      document.getElementById("noteContent").value = "";
-    }
-
-    // ========= QUIZZES =========
-    function getQuizzes() {
-      return loadData(STORAGE_KEYS.QUIZZES, []);
-    }
-    function saveQuizzes(q) {
-      saveData(STORAGE_KEYS.QUIZZES, q);
-    }
-
-    function renderQuizzes() {
-      const tbody = document.getElementById("quizTableBody");
-      if (!tbody) return;
-      const quizzes = getQuizzes();
-      const subjects = getSubjects();
-      tbody.innerHTML = "";
-
-      quizzes.forEach((q) => {
-        const subj = subjects.find((s) => s.code === q.paper);
-        const subjName = subj ? subj.name : q.paper;
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-          <td>${subjName}</td>
-          <td>${q.module || "-"}</td>
-          <td>${q.question}</td>
-          <td>
-            <button class="btn-sm btn-secondary" data-action="edit" data-id="${q.id}">
-              Edit
-            </button>
-            <button class="btn-sm btn-danger" data-action="delete" data-id="${q.id}">
-              Del
-            </button>
-          </td>
-        `;
-        tbody.appendChild(tr);
-      });
-
-      tbody.querySelectorAll("button").forEach((btn) => {
-        const id = btn.dataset.id;
-        const action = btn.dataset.action;
-        btn.addEventListener("click", () => {
-          if (action === "edit") loadQuizIntoForm(id);
-          else if (action === "delete") deleteQuiz(id);
-        });
-      });
-    }
-
-    function handleQuizForm(e) {
-      e.preventDefault();
-      let quizzes = getQuizzes();
-
-      const idEl = document.getElementById("quizId");
-      const paperEl = document.getElementById("quizPaper");
-      const moduleEl = document.getElementById("quizModule");
-      const qEl = document.getElementById("quizQuestion");
-      const optsEl = document.getElementById("quizOptions");
-      const ansEl = document.getElementById("quizAnswerIndex");
-      const explEl = document.getElementById("quizExplanation");
-
-      const id = idEl.value;
-      const paper = paperEl.value;
-      const module = moduleEl.value || "";
-      const question = qEl.value.trim();
-      const options = optsEl.value
-        .split("\n")
-        .map((x) => x.trim())
-        .filter(Boolean);
-      const answerIndex = parseInt(ansEl.value, 10) || 0;
-      const explanation = explEl.value.trim();
-
-      if (!paper || !question || !options.length) return;
-
-      if (id) {
-        const q = quizzes.find((x) => x.id === id);
-        if (q) {
-          q.paper = paper;
-          q.module = module;
-          q.question = question;
-          q.options = options;
-          q.answerIndex = answerIndex;
-          q.explanation = explanation;
-        }
-      } else {
-        quizzes.push({
-          id: generateId("quiz"),
-          paper,
-          module,
-          question,
-          options,
-          answerIndex,
-          explanation
-        });
-      }
-
-      saveQuizzes(quizzes);
-      resetQuizForm();
-      renderQuizzes();
-    }
-
-    function loadQuizIntoForm(id) {
-      const quizzes = getQuizzes();
-      const q = quizzes.find((x) => x.id === id);
-      if (!q) return;
-      document.getElementById("quizId").value = q.id;
-      document.getElementById("quizPaper").value = q.paper;
-      fillModuleSelectForSubject(q.paper, document.getElementById("quizModule"));
-      document.getElementById("quizModule").value = q.module || "";
-      document.getElementById("quizQuestion").value = q.question;
-      document.getElementById("quizOptions").value = (q.options || []).join(
-        "\n"
-      );
-      document.getElementById("quizAnswerIndex").value =
-        typeof q.answerIndex === "number" ? q.answerIndex : 0;
-      document.getElementById("quizExplanation").value = q.explanation || "";
-    }
-
-    function deleteQuiz(id) {
-      if (!confirm("Delete this question?")) return;
-      let quizzes = getQuizzes();
-      quizzes = quizzes.filter((q) => q.id !== id);
-      saveQuizzes(quizzes);
-      renderQuizzes();
-    }
-
-    function resetQuizForm() {
-      document.getElementById("quizId").value = "";
-      document.getElementById("quizQuestion").value = "";
-      document.getElementById("quizOptions").value = "";
-      document.getElementById("quizAnswerIndex").value = 0;
-      document.getElementById("quizModule").value = "";
-      document.getElementById("quizExplanation").value = "";
-    }
-
-    // ========= SELECT POPULATION =========
-    function fillSubjectSelects() {
-      const subjects = getSubjects();
-      const notePaperSel = document.getElementById("notePaper");
-      const quizPaperSel = document.getElementById("quizPaper");
-
-      if (notePaperSel) {
-        notePaperSel.innerHTML = "";
-        subjects.forEach((s) => {
-          const opt = document.createElement("option");
-          opt.value = s.code;
-          opt.textContent = s.name;
-          notePaperSel.appendChild(opt);
-        });
-      }
-      if (quizPaperSel) {
-        quizPaperSel.innerHTML = "";
-        subjects.forEach((s) => {
-          const opt = document.createElement("option");
-          opt.value = s.code;
-          opt.textContent = s.name;
-          quizPaperSel.appendChild(opt);
-        });
-      }
-    }
-
-    function fillModuleSelectForSubject(subjectCode, selectEl) {
-      const modules = getModulesForSubject(subjectCode);
-      if (!selectEl) return;
-      selectEl.innerHTML = "";
-      const def = document.createElement("option");
-      def.value = "";
-      def.textContent = "All / Not Applicable";
-      selectEl.appendChild(def);
-      modules.forEach((m) => {
-        const opt = document.createElement("option");
-        opt.value = m.code;
-        opt.textContent = m.code + " – " + m.name;
-        selectEl.appendChild(opt);
-      });
-    }
-
-    function bindSubjectModuleLinking() {
-      const notePaperSel = document.getElementById("notePaper");
-      const noteModuleSel = document.getElementById("noteModule");
-      const quizPaperSel = document.getElementById("quizPaper");
-      const quizModuleSel = document.getElementById("quizModule");
-
-      if (notePaperSel && noteModuleSel) {
-        notePaperSel.addEventListener("change", () => {
-          fillModuleSelectForSubject(notePaperSel.value, noteModuleSel);
-        });
-        if (notePaperSel.value) {
-          fillModuleSelectForSubject(notePaperSel.value, noteModuleSel);
-        }
-      }
-      if (quizPaperSel && quizModuleSel) {
-        quizPaperSel.addEventListener("change", () => {
-          fillModuleSelectForSubject(quizPaperSel.value, quizModuleSel);
-        });
-        if (quizPaperSel.value) {
-          fillModuleSelectForSubject(quizPaperSel.value, quizModuleSel);
-        }
-      }
-    }
-
-    // ========= BACKUP / RESTORE =========
-    function exportBackup() {
-      const data = {
-        subjects: getSubjects(),
-        modules: getModules(),
-        notes: getNotes(),
-        quizzes: getQuizzes()
-      };
-      const blob = new Blob([JSON.stringify(data, null, 2)], {
-        type: "application/json"
-      });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "banking_prep_backup.json";
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      URL.revokeObjectURL(url);
-    }
-
-    function importBackupFile(file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        try {
-          const json = JSON.parse(e.target.result);
-          if (json.subjects) saveSubjects(json.subjects);
-          if (json.modules) saveModules(json.modules);
-          if (json.notes) saveNotes(json.notes);
-          if (json.quizzes) saveQuizzes(json.quizzes);
-          alert("Backup imported successfully.");
-          initAdmin();
-        } catch (err) {
-          console.error(err);
-          alert("Invalid JSON backup file.");
-        }
-      };
-      reader.readAsText(file);
-    }
-
-    // ========= INIT =========
-    function initAdmin() {
-      ensureDefaultSubjectsAndModules();
-      renderSubjects();
-      renderModulesAdmin();
-      renderNotes();
-      renderQuizzes();
-    }
-
-    document.addEventListener("DOMContentLoaded", () => {
-      initAdmin();
-
-      document
-        .getElementById("subjectForm")
-        .addEventListener("submit", handleSubjectForm);
-      document
-        .getElementById("moduleForm")
-        .addEventListener("submit", handleModuleForm);
-
-      document
-        .getElementById("noteForm")
-        .addEventListener("submit", handleNoteForm);
-      document
-        .getElementById("noteResetBtn")
-        .addEventListener("click", resetNoteForm);
-
-      document
-        .getElementById("quizForm")
-        .addEventListener("submit", handleQuizForm);
-      document
-        .getElementById("quizResetBtn")
-        .addEventListener("click", resetQuizForm);
-
-      document
-        .getElementById("exportBtn")
-        .addEventListener("click", (e) => {
-          e.preventDefault();
-          exportBackup();
+        users.push({
+            id: generateId("user"),
+            name,
+            email,
+            role
         });
 
-      document
-        .getElementById("importFile")
-        .addEventListener("change", (e) => {
-          const file = e.target.files[0];
-          if (file) importBackupFile(file);
-        });
-    });
-  </script>
+        saveUsers(users);
+        nameEl.value = "";
+        emailEl.value = "";
+        // roleEl.value will remain on the selected value
+        renderUsers();
+    }
+
+    function deleteUser(id) {
+        if (!confirm("Delete this user?")) return;
+        let users = getUsers();
+        users = users.filter((u) => u.id !== id);
+        saveUsers(users);
+        renderUsers();
+    }
+    // ========= END USERS =========
+
+
+    // ========= SELECT POPULATION (UNMODIFIED) =========
+    function fillSubjectSelects() {
+      const subjects = getSubjects();
+      const notePaperSel = document.getElementById("notePaper");
+      const quizPaperSel = document.getElementById("quizPaper");
+
+      if (notePaperSel) {
+        notePaperSel.innerHTML = "";
+        subjects.forEach((s) => {
+          const opt = document.createElement("option");
+          opt.value = s.code;
+          opt.textContent = s.name;
+          notePaperSel.appendChild(opt);
+        });
+      }
+      if (quizPaperSel) {
+        quizPaperSel.innerHTML = "";
+        subjects.forEach((s) => {
+          const opt = document.createElement("option");
+          opt.value = s.code;
+          opt.textContent = s.name;
+          quizPaperSel.appendChild(opt);
+        });
+      }
+    }
+
+    function fillModuleSelectForSubject(subjectCode, selectEl) {
+      const modules = getModulesForSubject(subjectCode);
+      if (!selectEl) return;
+      selectEl.innerHTML = "";
+      const def = document.createElement("option");
+      def.value = "";
+      def.textContent = "All / Not Applicable";
+      selectEl.appendChild(def);
+      modules.forEach((m) => {
+        const opt = document.createElement("option");
+        opt.value = m.code;
+        opt.textContent = m.code + " – " + m.name;
+        selectEl.appendChild(opt);
+      });
+    }
+
+    function bindSubjectModuleLinking() {
+      const notePaperSel = document.getElementById("notePaper");
+      const noteModuleSel = document.getElementById("noteModule");
+      const quizPaperSel = document.getElementById("quizPaper");
+      const quizModuleSel = document.getElementById("quizModule");
+
+      if (notePaperSel && noteModuleSel) {
+        notePaperSel.addEventListener("change", () => {
+          fillModuleSelectForSubject(notePaperSel.value, noteModuleSel);
+        });
+        if (notePaperSel.value) {
+          fillModuleSelectForSubject(notePaperSel.value, noteModuleSel);
+        }
+      }
+      if (quizPaperSel && quizModuleSel) {
+        quizPaperSel.addEventListener("change", () => {
+          fillModuleSelectForSubject(quizPaperSel.value, quizModuleSel);
+        });
+        if (quizPaperSel.value) {
+          fillModuleSelectForSubject(quizPaperSel.value, quizModuleSel);
+        }
+      }
+    }
+
+    // ========= BACKUP / RESTORE (MODIFIED FOR USERS) =========
+    function exportBackup() {
+      const data = {
+        subjects: getSubjects(),
+        modules: getModules(),
+        notes: getNotes(),
+        quizzes: getQuizzes(),
+        users: getUsers() // NEW: Include users in backup
+      };
+      const blob = new Blob([JSON.stringify(data, null, 2)], {
+        type: "application/json"
+      });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "banking_prep_backup.json";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    }
+
+    function importBackupFile(file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const json = JSON.parse(e.target.result);
+          if (json.subjects) saveSubjects(json.subjects);
+          if (json.modules) saveModules(json.modules);
+          if (json.notes) saveNotes(json.notes);
+          if (json.quizzes) saveQuizzes(json.quizzes);
+          if (json.users) saveUsers(json.users); // NEW: Import users
+          alert("Backup imported successfully.");
+          initAdmin();
+        } catch (err) {
+          console.error(err);
+          alert("Invalid JSON backup file.");
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    // ========= INIT (MODIFIED FOR USERS) =========
+    function initAdmin() {
+      ensureDefaultSubjectsAndModules();
+      renderSubjects();
+      renderModulesAdmin();
+      renderNotes();
+      renderQuizzes();
+      renderUsers(); // NEW: Render users on load
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      initAdmin();
+
+      document
+        .getElementById("subjectForm")
+        .addEventListener("submit", handleSubjectForm);
+      document
+        .getElementById("moduleForm")
+        .addEventListener("submit", handleModuleForm);
+
+      document
+        .getElementById("noteForm")
+        .addEventListener("submit", handleNoteForm);
+      document
+        .getElementById("noteResetBtn")
+        .addEventListener("click", resetNoteForm);
+
+      document
+        .getElementById("quizForm")
+        .addEventListener("submit", handleQuizForm);
+      document
+        .getElementById("quizResetBtn")
+        .addEventListener("click", resetQuizForm);
+
+      // NEW: User Form Listener
+      document
+        .getElementById("userForm")
+        .addEventListener("submit", handleUserForm);
+
+      document
+        .getElementById("exportBtn")
+        .addEventListener("click", (e) => {
+          e.preventDefault();
+          exportBackup();
+        });
+
+      document
+        .getElementById("importFile")
+        .addEventListener("change", (e) => {
+          const file = e.target.files[0];
+          if (file) importBackupFile(file);
+        });
+    });
+  </script>
 </body>
 </html>
