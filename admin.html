@@ -571,6 +571,105 @@
   </div>
 
   <script>
+
+// Add a new storage key for users
+const STORAGE_KEYS = {
+    // ... (existing keys)
+    USERS: "bp_users" 
+};
+
+// ... (existing utility functions: loadData, saveData, generateId)
+
+// ========= USERS FUNCTIONS =========
+
+function getUsers() {
+    return loadData(STORAGE_KEYS.USERS, []);
+}
+
+function saveUsers(u) {
+    saveData(STORAGE_KEYS.USERS, u);
+}
+
+function renderUsers() {
+    const tbody = document.getElementById("userTableBody");
+    if (!tbody) return;
+    const users = getUsers();
+    tbody.innerHTML = "";
+
+    users.forEach((u) => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+            <td>${u.name}</td>
+            <td><span class="badge" style="background: rgba(255,193,7,0.1); color: #ffeb3b;">${u.email}</span></td>
+            <td>${u.role}</td>
+            <td>
+                <button class="btn-sm btn-danger" data-id="${u.id}">
+                    Delete
+                </button>
+            </td>
+        `;
+        tbody.appendChild(tr);
+    });
+
+    tbody
+        .querySelectorAll("button[data-id]")
+        .forEach((btn) =>
+            btn.addEventListener("click", () => deleteUser(btn.dataset.id))
+        );
+}
+
+function handleUserForm(e) {
+    e.preventDefault();
+    const nameEl = document.getElementById("userName");
+    const emailEl = document.getElementById("userEmail");
+    const roleEl = document.getElementById("userRole");
+
+    const name = nameEl.value.trim();
+    const email = emailEl.value.trim();
+    const role = roleEl.value;
+
+    if (!name || !email || !role) return;
+
+    let users = getUsers();
+
+    // Prevent duplicate emails
+    if (users.some((u) => u.email.toLowerCase() === email.toLowerCase())) {
+        alert("A user with this email already exists.");
+        return;
+    }
+
+    users.push({
+        id: generateId("user"),
+        name,
+        email,
+        role
+    });
+
+    saveUsers(users);
+    // Clear form fields after successful submission
+    nameEl.value = "";
+    emailEl.value = "";
+    renderUsers();
+}
+
+function deleteUser(id) {
+    if (!confirm("Delete this user?")) return;
+    let users = getUsers();
+    users = users.filter((u) => u.id !== id);
+    saveUsers(users);
+    renderUsers();
+}
+
+// ... (Existing functions like initAdmin and export/import must be updated
+// to call renderUsers() and include getUsers() and saveUsers() for backups.)
+
+// Event Listener setup (inside the main DOMContentLoaded block)
+document
+    .getElementById("userForm")
+    .addEventListener("submit", handleUserForm);
+
+
+      
     // ========= BASIC STORAGE HELPERS =========
     const STORAGE_KEYS = {
       SUBJECTS: "bp_subjects",
