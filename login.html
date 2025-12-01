@@ -5,46 +5,69 @@
     <title>Login - Banking Prep</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        * { box-sizing: border-box; font-family: system-ui, sans-serif; }
+        /* Light Theme Color Palette */
+        :root {
+            --color-bg-primary: #f8f9fa;
+            --color-card-bg: #ffffff;
+            --color-card-shadow: rgba(0, 0, 0, 0.1);
+            --color-text-primary: #212529;
+            --color-text-secondary: #5c6773;
+            --color-accent-blue: #007bff;
+            --color-accent-red: #dc3545;
+            --color-input-bg: #ffffff;
+            --color-input-border: #ced4da;
+        }
+
+        * { box-sizing: border-box; font-family: 'Inter', system-ui, sans-serif; }
         body {
-            margin: 0; padding: 0; background: #0b1020; color: #f5f7ff;
+            margin: 0; padding: 0; background: var(--color-bg-primary); color: var(--color-text-primary);
             display: flex; justify-content: center; align-items: center; min-height: 100vh;
         }
         .login-container {
             width: 90%; max-width: 400px;
-            background: radial-gradient(circle at top left, #24325c, #15192b);
-            border-radius: 16px; padding: 2rem; box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
-            border: 1px solid rgba(255, 255, 255, 0.07);
+            background: var(--color-card-bg);
+            border-radius: 12px; padding: 2rem; 
+            box-shadow: 0 8px 25px var(--color-card-shadow);
+            border: 1px solid #e9ecef;
         }
-        h1 { margin-top: 0; font-size: 1.5rem; text-align: center; color: #4ad4ff; }
-        label { display: block; font-size: 0.85rem; margin-bottom: 0.2rem; color: #d7ddff; }
+        h1 { margin-top: 0; font-size: 1.8rem; text-align: center; color: var(--color-accent-blue); }
+        label { display: block; font-size: 0.85rem; margin-bottom: 0.2rem; color: var(--color-text-primary); font-weight: 600; }
         input {
-            width: 100%; padding: 0.5rem; margin-bottom: 1rem; border-radius: 8px;
-            border: 1px solid rgba(255, 255, 255, 0.12); background: rgba(3, 5, 15, 0.9);
-            color: #f5f7ff; font-size: 0.9rem; outline: none;
+            width: 100%; padding: 0.6rem; margin-bottom: 1rem; border-radius: 6px;
+            border: 1px solid var(--color-input-border); background: var(--color-input-bg);
+            color: var(--color-text-primary); font-size: 0.95rem; outline: none;
         }
+        input:focus { border-color: var(--color-accent-blue); box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25); }
+        
         .btn-primary {
-            width: 100%; border: none; border-radius: 999px; padding: 0.75rem;
+            width: 100%; border: none; border-radius: 6px; padding: 0.75rem;
             font-size: 1rem; cursor: pointer; font-weight: 600; margin-top: 1rem;
-            background: linear-gradient(135deg, #4ad4ff, #00ffbf); color: #04101b;
+            background: var(--color-accent-blue); color: #ffffff;
+            transition: background-color 0.2s;
         }
+        .btn-primary:hover { background: #0056b3; }
+
         #message {
-            text-align: center; color: #ff9ea9; margin-bottom: 1rem; font-size: 0.85rem;
+            text-align: center; color: var(--color-accent-red); margin-bottom: 1rem; font-size: 0.85rem;
             display: none;
         }
         .admin-link {
             text-align: center; margin-top: 1.5rem; font-size: 0.8rem;
         }
         .admin-link a {
-            color: #b8c4ff; text-decoration: none;
+            color: var(--color-accent-blue); text-decoration: none;
+            transition: color 0.2s;
         }
-        /* NEW STYLE FOR DEVELOPER CREDIT */
+        .admin-link a:hover { color: #0056b3; text-decoration: underline; }
+
+        /* DEVELOPER CREDIT STYLE */
         .developer-credit {
             position: fixed;
             bottom: 10px;
             right: 15px;
             font-size: 0.7rem;
-            color: #5d709e; /* Subtle blue/gray color */
+            color: var(--color-text-secondary); 
+            opacity: 0.7;
         }
     </style>
 </head>
@@ -68,7 +91,6 @@
     </div>
 </div>
 
-<!-- DEVELOPER CREDIT ADDED HERE -->
 <div class="developer-credit">Developed and managed by Gaurav G.</div>
 
 <script>
@@ -116,7 +138,7 @@
         if (users.length === 0) {
              document.getElementById('message').innerHTML = 'No users found. Please create one in the <a href="admin.html">Admin Panel</a>.';
              document.getElementById('message').style.display = 'block';
-             document.getElementById('message').style.color = '#fff0b3';
+             document.getElementById('message').style.color = '#007bff'; // Blue text for informative warning
         }
     });
 </script>
