@@ -3,52 +3,82 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Learning Portal Login</title>
+    <title>Admin Dashboard</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
-    <div class="login-box">
-        <h2>📚 Portal Login</h2>
-        <form id="loginForm">
-            <div class="input-group">
-                <label for="username">Username</label>
-                <input type="text" id="username" required>
-            </div>
-            <div class="input-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" required>
-            </div>
-            <button type="submit" class="btn primary">Login</button>
-        </form>
-        <p id="error-message" class="error-message"></p>
-        <div class="note-text">
-            <p>Admin Username: <strong>admin</strong>, Password: <strong>admin123</strong></p>
-            <p>Student Username: <strong>student</strong>, Password: <strong>student123</strong></p>
-        </div>
-    </div>
+<body class="dashboard-body">
+    <header class="header">
+        <h1>Admin Control Panel</h1>
+        <button onclick="logout()" class="btn secondary">Logout</button>
+    </header>
+
+    <main class="container admin-container">
+        <section class="admin-section">
+            <h2>➕ User Management (Placeholder)</h2>
+            <p class="note-text">In a real application with a database, you would create users here.</p>
+            <form id="createUserForm" class="form-grid">
+                <input type="text" placeholder="New Username" required>
+                <input type="password" placeholder="New Password" required>
+                <select>
+                    <option>Student</option>
+                    <option>Admin</option>
+                </select>
+                <button type="submit" class="btn primary">Create User</button>
+            </form>
+        </section>
+        
+        <hr>
+
+        <section class="admin-section">
+            <h2>📚 Manage Study Materials (View Only)</h2>
+            <p class="note-text">For this simple version, material content is managed directly in **materials.json**.</p>
+            <div id="materials-admin-list" class="materials-grid">
+                </div>
+        </section>
+    </main>
 
     <script>
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const username = document.getElementById('username').value.trim();
-            const password = document.getElementById('password').value.trim();
-            const errorMessage = document.getElementById('error-message');
-            
-            errorMessage.textContent = ''; // Clear previous errors
+        // Check if the user is logged in as admin
+        const role = localStorage.getItem('role');
+        if (role !== 'admin') {
+            window.location.href = 'index.html';
+        }
 
-            // --- Simplified Authentication Logic ---
-            if (username === 'admin' && password === 'admin123') {
-                localStorage.setItem('role', 'admin');
-                localStorage.setItem('user', username);
-                window.location.href = 'admin.html';
-            } else if (username === 'student' && password === 'student123') {
-                localStorage.setItem('role', 'student');
-                localStorage.setItem('user', username);
-                window.location.href = 'student.html';
-            } else {
-                errorMessage.textContent = 'Invalid username or password.';
+        function logout() {
+            localStorage.clear();
+            window.location.href = 'index.html';
+        }
+
+        async function loadMaterialsAdmin() {
+            try {
+                const response = await fetch('materials.json');
+                const materials = await response.json();
+                const container = document.getElementById('materials-admin-list');
+                container.innerHTML = '';
+
+                materials.forEach(material => {
+                    const card = document.createElement('div');
+                    card.className = 'material-card admin-card';
+                    card.innerHTML = `
+                        <h3>${material.title}</h3>
+                        <p><strong>Topic:</strong> ${material.topic}</p>
+                        <p><strong>Status:</strong> <span class="${material.status.toLowerCase()}">${material.status}</span></p>
+                        <button class="btn small edit-btn">Edit/Delete</button>
+                    `;
+                    container.appendChild(card);
+                });
+            } catch (error) {
+                console.error('Error loading materials:', error);
+                document.getElementById('materials-admin-list').innerHTML = '<p class="error-message">Could not load materials.</p>';
             }
+        }
+        
+        document.getElementById('createUserForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('User creation functionality is a placeholder. You need a backend and database for this!');
         });
+
+        loadMaterialsAdmin();
     </script>
 </body>
 </html>
