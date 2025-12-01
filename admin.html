@@ -484,24 +484,59 @@
             e.preventDefault(); 
             // Simplified for space, relying on input validation and submission logic
             let notes = getNotes();
-            const note = { id: generateId('note'), title: document.getElementById('noteTitle').value, paper: document.getElementById('notePaper').value };
-            saveNotes([...notes, note]); 
+            const note = { id: document.getElementById('noteId').value || generateId('note'), title: document.getElementById('noteTitle').value, content: document.getElementById('noteContent').value, paper: document.getElementById('notePaper').value, module: document.getElementById('noteModule').value };
+            
+            if (document.getElementById('noteId').value) {
+                saveNotes(notes.map(n => n.id === note.id ? note : n));
+            } else {
+                saveNotes([...notes, note]); 
+            }
+            
+            document.getElementById('noteId').value = ""; // Reset ID field
             renderNotesQuizzes(); renderAnalytics(); 
         }
+
         function handleQuizForm(e) { 
             e.preventDefault(); 
             // Simplified for space, relying on input validation and submission logic
             let quizzes = getQuizzes();
-            const quiz = { id: generateId('quiz'), question: document.getElementById('quizQuestion').value, paper: document.getElementById('quizPaper').value };
-            saveQuizzes([...quizzes, quiz]); 
+            const quiz = { 
+                id: document.getElementById('quizId').value || generateId('quiz'), 
+                question: document.getElementById('quizQuestion').value, 
+                paper: document.getElementById('quizPaper').value, 
+                options: document.getElementById('quizOptions').value.split('\n'),
+                answerIndex: parseInt(document.getElementById('quizAnswerIndex').value),
+                module: document.getElementById('quizModule').value
+            };
+            
+            if (document.getElementById('quizId').value) {
+                saveQuizzes(quizzes.map(q => q.id === quiz.id ? quiz : q));
+            } else {
+                saveQuizzes([...quizzes, quiz]); 
+            }
+
+            document.getElementById('quizId').value = ""; // Reset ID field
             renderNotesQuizzes(); renderAnalytics(); 
         }
+
         function handleAssignmentForm(e) { 
             e.preventDefault(); 
             // Simplified for space, relying on input validation and submission logic
             let assignments = getAssignments();
-            const assignment = { id: generateId('assign'), title: document.getElementById('assignmentTitle').value };
-            saveAssignments([...assignments, assignment]); 
+            const assignment = { 
+                id: document.getElementById('assignmentId').value || generateId('assign'), 
+                title: document.getElementById('assignmentTitle').value,
+                description: document.getElementById('assignmentDescription').value,
+                dueDate: document.getElementById('assignmentDueDate').value
+            };
+
+            if (document.getElementById('assignmentId').value) {
+                saveAssignments(assignments.map(a => a.id === assignment.id ? assignment : a));
+            } else {
+                saveAssignments([...assignments, assignment]); 
+            }
+            
+            document.getElementById('assignmentId').value = ""; // Reset ID field
             renderAnalytics(); 
         }
 
@@ -519,6 +554,7 @@
             renderUsers();
             renderNotesQuizzes();
             renderAnalytics();
+            
             // Bind complex form handlers 
             document.getElementById("adminLogoutBtn").addEventListener("click", handleAdminLogout);
             document.getElementById("userForm").addEventListener("submit", handleUserForm);
@@ -527,16 +563,61 @@
             document.getElementById("noteForm").addEventListener("submit", handleNoteForm);
             document.getElementById("quizForm").addEventListener("submit", handleQuizForm);
             document.getElementById("assignmentForm").addEventListener("submit", handleAssignmentForm);
-            // Mock/Utility bindings
-            document.getElementById("notePaper")?.addEventListener("change", () => {
-                const selectedSubject = document.getElementById("notePaper").value;
-                const moduleSelect = document.getElementById("noteModule");
-                moduleSelect.innerHTML = getModules().filter(m => m.subjectCode === selectedSubject).map(m => `<option value="${m.code}">${m.code} - ${m.name}</option>`).join('');
-                moduleSelect.innerHTML += '<option value="">All / N/A</option>';
+            
+            // General event listeners (Backup/Restore and Select linking)
+            document.getElementById("exportBtn").addEventListener("click", (e) => { e.preventDefault(); exportBackup(); });
+            document.getElementById("restoreInput").addEventListener("change", (e) => { const file = e.target.files[0]; if (file) importBackupFromFile(file); });
+
+            ['notePaper', 'quizPaper'].forEach(id => {
+                document.getElementById(id)?.addEventListener("change", (e) => {
+                    const targetModuleId = id === 'notePaper' ? 'noteModule' : 'quizModule';
+                    const selectedSubject = e.target.value;
+                    const moduleSelect = document.getElementById(targetModuleId);
+                    
+                    const modulesHtml = getModules().filter(m => m.subjectCode === selectedSubject)
+                                                    .map(m => `<option value="${m.code}">${m.code} - ${m.name}</option>`)
+                                                    .join('');
+                    
+                    moduleSelect.innerHTML = `<option value="">All / N/A</option>${modulesHtml}`;
+                });
             });
+
+            // Initial load of module selects
+            document.getElementById("notePaper")?.dispatchEvent(new Event('change'));
+            document.getElementById("quizPaper")?.dispatchEvent(new Event('change'));
         }
         
         document.addEventListener("DOMContentLoaded", initAdmin);
+
+        // --- BACKUP / RESTORE Implementation ---
+        function exportBackup() {
+            const data = {
+                subjects: getSubjects(), modules: getModules(), notes: getNotes(), quizzes: getQuizzes(), users: getUsers(), assignments: getAssignments(), submissions: getSubmissions()
+            };
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url; a.download = "banking_prep_backup.json"; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+        }
+
+        function importBackupFromFile(file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const json = JSON.parse(e.target.result);
+                    if (json.subjects) saveSubjects(json.subjects);
+                    if (json.modules) saveModules(json.modules);
+                    if (json.notes) saveNotes(json.notes);
+                    if (json.quizzes) saveQuizzes(json.quizzes);
+                    if (json.users) saveUsers(json.users); 
+                    if (json.assignments) saveAssignments(json.assignments);
+                    if (json.submissions) saveSubmissions(json.submissions);
+                    alert("Backup imported successfully. Reloading page...");
+                    window.location.reload();
+                } catch (err) { console.error(err); alert("Invalid JSON backup file."); }
+            };
+            reader.readAsText(file);
+        }
     </script>
 </body>
 </html>
