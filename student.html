@@ -203,8 +203,8 @@
         // --- AUTH & INIT CHECK ---
         function redirectToLogin() {
             saveData(STORAGE_KEYS.SESSION, null);
-            // FIX: Using window.location.assign() is often more stable for navigating
-            // to a file in these restricted environments than .href or .replace
+            // FIX: Using window.location.assign() is the most robust way to navigate 
+            // in sandboxed environments without triggering strict URL validation errors.
             window.location.assign('login.html'); 
         }
 
