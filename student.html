@@ -1,65 +1,504 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Dashboard</title>
-    <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8" />
+    <title>Student Dashboard | Banking Study Portal</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+        /* Light Theme Color Palette - Consistent across all pages */
+        :root {
+            --color-bg-primary: #f8f9fa;
+            --color-card-bg: #ffffff;
+            --color-card-shadow: rgba(0, 0, 0, 0.1);
+            --color-text-primary: #212529;
+            --color-text-secondary: #5c6773;
+            --color-accent-blue: #007bff;
+            --color-accent-green: #28a745;
+            --color-accent-red: #dc3545;
+            --color-header-bg: #ffffff;
+        }
+
+        * { box-sizing: border-box; font-family: 'Inter', system-ui, sans-serif; }
+        body { margin: 0; padding: 0; background: var(--color-bg-primary); color: var(--color-text-primary); min-height: 100vh; }
+        .top-bar {
+            max-width: 1200px; margin: 0 auto; padding: 1rem 1.5rem; display: flex;
+            justify-content: space-between; align-items: center; background: var(--color-header-bg);
+            border-bottom: 1px solid #ced4da; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        .top-left h2 { margin: 0; font-size: 1.5rem; color: var(--color-accent-blue); }
+        .welcome-text { display: block; font-size: 0.9rem; color: var(--color-text-secondary); }
+        .nav-btn {
+            border: 1px solid #ced4da; background: var(--color-card-bg); color: var(--color-text-primary);
+            padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; font-size: 0.9rem; margin-left: 0.5rem;
+            transition: all 0.2s;
+        }
+        .nav-btn:hover { background: #e9ecef; }
+        #logoutBtn { background: var(--color-accent-red); color: white; border-color: var(--color-accent-red); }
+        #logoutBtn:hover { background: #bd2130; }
+
+        .main-content { max-width: 1200px; margin: 1.5rem auto; padding: 0 1.5rem; }
+        .student-section {
+            background: var(--color-card-bg); border-radius: 12px; padding: 1.5rem;
+            box-shadow: 0 4px 15px var(--color-card-shadow); margin-bottom: 1.5rem; display: none;
+        }
+        .student-section.active { display: block; }
+        h2 { color: var(--color-accent-blue); border-bottom: 2px solid #e9ecef; padding-bottom: 0.5rem; margin-top: 0; }
+        .section-note { color: var(--color-text-secondary); font-size: 0.85rem; margin-bottom: 1rem; }
+
+        /* Tabs and Filters */
+        .subject-tabs { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem; }
+        .subject-tab {
+            background: #e9ecef; color: var(--color-text-secondary); border: 1px solid #ced4da;
+            padding: 0.4rem 0.8rem; border-radius: 6px; cursor: pointer; font-size: 0.8rem;
+            transition: background 0.2s;
+        }
+        .subject-tab:hover { background: #d3d7db; }
+        .subject-tab.active { background: var(--color-accent-blue); color: white; border-color: var(--color-accent-blue); }
+
+        /* Notes List */
+        .notes-list, .assignments-list { margin-top: 1.5rem; display: grid; gap: 1rem; }
+        .note-item { background: #f1f1f1; padding: 1rem; border-radius: 8px; border-left: 5px solid var(--color-accent-green); }
+        .note-item h4 { margin: 0 0 0.4rem; font-size: 1rem; color: var(--color-text-primary); }
+        .note-meta { font-size: 0.75rem; color: var(--color-text-secondary); }
+
+        /* Quiz Panel */
+        .quiz-card { border: 1px solid #ced4da; border-radius: 12px; padding: 1.5rem; background: #f1f1f1; }
+        .quiz-question { font-size: 1.1rem; font-weight: 600; margin-bottom: 1rem; }
+        .quiz-options { margin-bottom: 1rem; }
+        .quiz-options label {
+            display: block; padding: 0.6rem; margin-bottom: 0.5rem; border: 1px solid #ced4da;
+            background: white; border-radius: 6px; cursor: pointer; transition: all 0.1s;
+        }
+        .quiz-options label:hover { background: #e9ecef; }
+        .quiz-options input[type="radio"]:checked + label {
+            border-color: var(--color-accent-blue); box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+            background: #f0f8ff;
+        }
+        .quiz-options input[type="radio"] { display: none; }
+        .quiz-options .correct-answer { background: #e6ffed; border-color: var(--color-accent-green); }
+        .quiz-options .incorrect-answer { background: #ffe6e6; border-color: var(--color-accent-red); }
+
+        .quiz-buttons-row { display: flex; gap: 1rem; margin-top: 1.5rem; }
+        .primary-btn { background: var(--color-accent-blue); color: white; border: none; padding: 0.6rem 1.2rem; border-radius: 6px; cursor: pointer; font-weight: 600; }
+        .secondary-btn-quiz { background: #ced4da; color: var(--color-text-primary); border: none; padding: 0.6rem 1.2rem; border-radius: 6px; cursor: pointer; font-weight: 600; }
+        
+        .quiz-feedback {
+            margin-top: 1rem; padding: 1rem; border-radius: 6px; border-left: 5px solid var(--color-accent-blue);
+            background: #f0f8ff; display: none;
+        }
+        .quiz-feedback.correct { border-left-color: var(--color-accent-green); background: #e6ffed; }
+        .quiz-feedback.incorrect { border-left-color: var(--color-accent-red); background: #ffe6e6; }
+        
+        /* Assignments */
+        .assignment-item { background: #f1f1f1; padding: 1rem; border-radius: 8px; border-left: 5px solid #ffc107; margin-bottom: 0.8rem; }
+        .assignment-item h4 { margin-top: 0; color: var(--color-text-primary); }
+        .assignment-item .meta { font-size: 0.8rem; color: var(--color-text-secondary); margin-bottom: 0.5rem; }
+        .assignment-item button { 
+            background: var(--color-accent-blue); color: white; border: none; padding: 0.4rem 0.8rem; border-radius: 4px; font-size: 0.8rem; 
+        }
+    </style>
 </head>
-<body class="dashboard-body">
-    <header class="header">
-        <h1>Welcome, <span id="userName"></span>!</h1>
-        <button onclick="logout()" class="btn secondary">Logout</button>
+<body data-role-required="student">
+    <header class="top-bar">
+        <div class="top-left">
+            <h2>Student Dashboard</h2>
+            <span id="studentWelcome" class="welcome-text"></span>
+        </div>
+        <nav class="nav">
+            <button class="nav-btn active" data-student-section="notes">Notes</button>
+            <button class="nav-btn" data-student-section="quiz">Quizzes</button>
+            <button class="nav-btn" data-student-section="assignments">Assignments</button>
+            <button id="logoutBtn" class="nav-btn" type="button">Logout</button>
+        </nav>
     </header>
 
-    <main class="container">
-        <h2>📖 Your Study Materials</h2>
-        <div id="materials-list" class="materials-grid">
+    <main class="main-content student-main">
+        <!-- NOTES -->
+        <section id="student-notes" class="student-section active">
+            <h2>📚 Study Notes</h2>
+            <p class="section-note">Select exam paper and module to view topics.</p>
+
+            <div class="subject-tabs" id="notesPaperTabs">
+                <button class="subject-tab active" data-paper="JAIIB-IEIFS">P1: IE & IFS</button>
+                <button class="subject-tab" data-paper="JAIIB-PPB">P2: PPB</button>
+                <button class="subject-tab" data-paper="JAIIB-AFM">P3: AFM</button>
             </div>
+
+            <div class="subject-tabs" id="notesModuleTabs">
+                <button class="subject-tab active" data-module="all">All Modules</button>
+            </div>
+
+            <div id="studentNotesList" class="notes-list">
+                <p class="section-note" id="notesPlaceholder">Loading content...</p>
+            </div>
+        </section>
+
+        <!-- QUIZ -->
+        <section id="student-quiz" class="student-section">
+            <h2>📝 Practice Quizzes</h2>
+            <p class="section-note">Your attempts are tracked locally to show progress.</p>
+
+            <div id="quizProgressSummary" class="section-note"></div>
+
+            <div class="subject-tabs" id="quizPaperTabs">
+                <button class="subject-tab active" data-paper="JAIIB-IEIFS">P1: IE & IFS</button>
+                <button class="subject-tab" data-paper="JAIIB-PPB">P2: PPB</button>
+                <button class="subject-tab" data-paper="JAIIB-AFM">P3: AFM</button>
+            </div>
+
+            <div class="subject-tabs" id="quizModuleTabs">
+                <button class="subject-tab active" data-module="all">All Modules</button>
+            </div>
+
+            <div id="quizPanel" class="quiz-card">
+                <div id="quizQuestionText" class="quiz-question">Select a subject to begin.</div>
+                <div id="quizOptions" class="quiz-options"></div>
+
+                <div class="quiz-buttons-row">
+                    <button id="quizCheckBtn" type="button" class="primary-btn quiz-check-btn" disabled>
+                        Check Answer
+                    </button>
+                    <button id="quizNextBtn" type="button" class="secondary-btn-quiz quiz-next-btn" disabled>
+                        Next Question
+                    </button>
+                </div>
+
+                <div id="quizFeedback" class="quiz-feedback"></div>
+            </div>
+        </section>
+
+        <!-- ASSIGNMENTS -->
+        <section id="student-assignments" class="student-section">
+            <h2>📌 Assignments</h2>
+            <p class="section-note">View assignments and mark them as submitted.</p>
+            <div id="assignmentList" class="assignments-list"></div>
+        </section>
     </main>
 
     <script>
-        // Check if the user is logged in as a student
-        const role = localStorage.getItem('role');
-        if (role !== 'student') {
-            window.location.href = 'index.html';
-        }
-        document.getElementById('userName').textContent = localStorage.getItem('user');
+        const STORAGE_KEYS = {
+            USERS: "bp_users", SESSION: "bp_session", NOTES: "bp_notes", QUIZZES: "bp_quizzes",
+            SUBJECTS: "bp_subjects", MODULES: "bp_modules", SUBMISSIONS: "bp_submissions",
+            ASSIGNMENTS: "bp_assignments"
+        };
+        const QUIZ_STATE = { currentQuiz: [], currentQuestionIndex: 0, currentAttempt: null };
 
-        function logout() {
-            localStorage.clear();
-            window.location.href = 'index.html';
-        }
-
-        async function loadMaterials() {
+        // --- UTILITY FUNCTIONS ---
+        function loadData(key, fallback = []) {
             try {
-                // Fetch data from the local JSON file
-                const response = await fetch('materials.json');
-                const materials = await response.json();
-                const container = document.getElementById('materials-list');
-                container.innerHTML = ''; // Clear previous content
+                const raw = localStorage.getItem(key);
+                if (!raw) return fallback;
+                return JSON.parse(raw);
+            } catch (e) { return fallback; }
+        }
+        function saveData(key, value) { localStorage.setItem(key, JSON.stringify(value)); }
+        function getUsers() { return loadData(STORAGE_KEYS.USERS, []); }
+        function getSubjects() { return loadData(STORAGE_KEYS.SUBJECTS, []); }
+        function getModules() { return loadData(STORAGE_KEYS.MODULES, []); }
+        function getNotes() { return loadData(STORAGE_KEYS.NOTES, []); }
+        function getQuizzes() { return loadData(STORAGE_KEYS.QUIZZES, []); }
+        function getAssignments() { return loadData(STORAGE_KEYS.ASSIGNMENTS, []); }
+        function getSubmissions() { return loadData(STORAGE_KEYS.SUBMISSIONS, []); }
 
-                materials.forEach(material => {
-                    // Only show materials that are "active" for the student
-                    if (material.status === 'Active') {
-                        const card = document.createElement('div');
-                        card.className = 'material-card';
-                        card.innerHTML = `
-                            <h3>${material.title}</h3>
-                            <p><strong>Topic:</strong> ${material.topic}</p>
-                            <p class="description">${material.description}</p>
-                            <a href="${material.link}" target="_blank" class="btn small">View Material</a>
-                        `;
-                        container.appendChild(card);
-                    }
+        // --- AUTH & INIT CHECK ---
+        function redirectToLogin() {
+            saveData(STORAGE_KEYS.SESSION, null);
+            // FIX: Using window.location.assign() is the most robust way to navigate 
+            // in sandboxed environments without triggering strict URL validation errors.
+            window.location.assign('login.html'); 
+        }
+
+        function enforceAuthAndInit() {
+            const session = loadData(STORAGE_KEYS.SESSION, null);
+            if (!session || session.role !== 'student') {
+                return redirectToLogin();
+            }
+            
+            const welcomeText = document.getElementById('studentWelcome');
+            welcomeText.textContent = `Welcome, ${session.name || session.email}!`;
+
+            document.getElementById('logoutBtn').addEventListener('click', redirectToLogin);
+            
+            setupNavigation();
+            setupFilters();
+            
+            // Initial load
+            const activePaper = document.querySelector('#notesPaperTabs .active')?.dataset.paper || 'JAIIB-IEIFS';
+            loadNotes(activePaper, 'all');
+            loadQuiz(activePaper, 'all');
+            loadAssignments();
+        }
+
+        // --- NAVIGATION ---
+        function setupNavigation() {
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    const targetSectionId = btn.getAttribute('data-student-section');
+                    document.querySelectorAll('.student-section').forEach(section => {
+                        section.classList.toggle('active', section.id === `student-${targetSectionId}`);
+                    });
                 });
-            } catch (error) {
-                console.error('Error loading materials:', error);
-                document.getElementById('materials-list').innerHTML = '<p class="error-message">Could not load materials.</p>';
+            });
+        }
+
+        // --- FILTER SETUP ---
+        function setupFilters() {
+            const subjects = getSubjects();
+            const modules = getModules();
+            
+            // Function to populate modules based on selected subject
+            const populateModules = (paperCode, moduleId) => {
+                const moduleTabs = document.getElementById(moduleId);
+                const relatedModules = modules.filter(m => m.subjectCode === paperCode);
+                
+                let html = '<button class="subject-tab active" data-module="all">All Modules</button>';
+                html += relatedModules.map(m => `<button class="subject-tab" data-module="${m.code}">${m.code}</button>`).join('');
+                moduleTabs.innerHTML = html;
+                
+                moduleTabs.querySelectorAll('.subject-tab').forEach(tab => {
+                    tab.addEventListener('click', (e) => {
+                        moduleTabs.querySelectorAll('.subject-tab').forEach(t => t.classList.remove('active'));
+                        tab.classList.add('active');
+                        const activePaper = document.querySelector(`#${moduleId.replace('ModuleTabs', 'PaperTabs')} .active`).dataset.paper;
+                        if (moduleId.includes('notes')) {
+                            loadNotes(activePaper, tab.dataset.module);
+                        } else {
+                            loadQuiz(activePaper, tab.dataset.module);
+                        }
+                    });
+                });
+            };
+
+            // Bind Paper Tabs
+            ['notes', 'quiz'].forEach(prefix => {
+                const paperTabs = document.getElementById(`${prefix}PaperTabs`);
+                const moduleTabsId = `${prefix}ModuleTabs`;
+                
+                paperTabs.querySelectorAll('.subject-tab').forEach(tab => {
+                    tab.addEventListener('click', () => {
+                        paperTabs.querySelectorAll('.subject-tab').forEach(t => t.classList.remove('active'));
+                        tab.classList.add('active');
+                        populateModules(tab.dataset.paper, moduleTabsId);
+                        
+                        if (prefix === 'notes') {
+                            loadNotes(tab.dataset.paper, 'all');
+                        } else {
+                            loadQuiz(tab.dataset.paper, 'all');
+                        }
+                    });
+                });
+            });
+            
+            // Initial module population
+            populateModules('JAIIB-IEIFS', 'notesModuleTabs');
+            populateModules('JAIIB-IEIFS', 'quizModuleTabs');
+        }
+
+
+        // --- NOTES LOGIC ---
+        function loadNotes(paperCode, moduleCode) {
+            const notesListEl = document.getElementById('studentNotesList');
+            const allNotes = getNotes();
+            
+            const filteredNotes = allNotes.filter(n => 
+                n.paper === paperCode && (moduleCode === 'all' || n.module === moduleCode)
+            );
+            
+            notesListEl.innerHTML = '';
+
+            if (filteredNotes.length === 0) {
+                notesListEl.innerHTML = `<p class="section-note">No notes found for this selection.</p>`;
+                return;
+            }
+
+            filteredNotes.forEach(note => {
+                const noteDiv = document.createElement('div');
+                noteDiv.className = 'note-item';
+                noteDiv.innerHTML = `
+                    <h4>${note.title}</h4>
+                    <p class="note-meta">${note.paper} ${note.module ? `- Module ${note.module}` : ''}</p>
+                    <p>${note.content || 'No content provided for this topic.'}</p>
+                `;
+                notesListEl.appendChild(noteDiv);
+            });
+        }
+
+        // --- QUIZ LOGIC ---
+        function getFilteredQuizzes(paperCode, moduleCode) {
+            const allQuizzes = getQuizzes();
+            return allQuizzes.filter(q => 
+                q.paper === paperCode && (moduleCode === 'all' || q.module === moduleCode)
+            );
+        }
+
+        function loadQuiz(paperCode, moduleCode) {
+            const filteredQuizzes = getFilteredQuizzes(paperCode, moduleCode);
+
+            QUIZ_STATE.currentQuiz = filteredQuizzes;
+            QUIZ_STATE.currentQuestionIndex = 0;
+            QUIZ_STATE.currentAttempt = null; // Clear previous attempt
+
+            if (filteredQuizzes.length === 0) {
+                document.getElementById('quizQuestionText').textContent = `No quizzes available for this selection.`;
+                document.getElementById('quizProgressSummary').textContent = '';
+                document.getElementById('quizOptions').innerHTML = '';
+                document.getElementById('quizCheckBtn').disabled = true;
+                document.getElementById('quizNextBtn').disabled = true;
+                document.getElementById('quizFeedback').style.display = 'none';
+                return;
+            }
+            
+            const totalAttempts = getSubmissions().filter(s => s.studentEmail === loadData(STORAGE_KEYS.SESSION)?.email && s.paper === paperCode).length;
+            document.getElementById('quizProgressSummary').textContent = 
+                `Total Questions: ${filteredQuizzes.length} | Your Attempts: ${totalAttempts}`;
+
+            displayQuestion(QUIZ_STATE.currentQuestionIndex);
+        }
+        
+        function displayQuestion(index) {
+            const q = QUIZ_STATE.currentQuiz[index];
+            if (!q) return;
+
+            document.getElementById('quizQuestionText').textContent = `Q ${index + 1}/${QUIZ_STATE.currentQuiz.length}: ${q.question}`;
+            const optionsEl = document.getElementById('quizOptions');
+            optionsEl.innerHTML = '';
+            
+            q.options.forEach((option, i) => {
+                const inputId = `opt_${i}`;
+                optionsEl.innerHTML += `
+                    <div>
+                        <input type="radio" name="quizOption" id="${inputId}" value="${i}" />
+                        <label for="${inputId}">${option}</label>
+                    </div>
+                `;
+            });
+
+            document.getElementById('quizCheckBtn').disabled = false;
+            document.getElementById('quizNextBtn').disabled = true;
+            document.getElementById('quizFeedback').style.display = 'none';
+            QUIZ_STATE.currentAttempt = null;
+        }
+
+        function checkAnswer() {
+            const selectedInput = document.querySelector('input[name="quizOption"]:checked');
+            if (!selectedInput) return alert("Please select an option first.");
+
+            const selectedIndex = parseInt(selectedInput.value);
+            const q = QUIZ_STATE.currentQuiz[QUIZ_STATE.currentQuestionIndex];
+            const feedbackEl = document.getElementById('quizFeedback');
+
+            const isCorrect = selectedIndex === q.answerIndex;
+            
+            // Highlight options and disable future selection
+            document.querySelectorAll('#quizOptions input[name="quizOption"]').forEach(input => {
+                const index = parseInt(input.value);
+                input.disabled = true;
+                const label = document.querySelector(`label[for="${input.id}"]`);
+
+                if (index === q.answerIndex) {
+                    label.classList.add('correct-answer');
+                } else if (index === selectedIndex && !isCorrect) {
+                    label.classList.add('incorrect-answer');
+                }
+            });
+
+            // Show feedback
+            feedbackEl.classList.remove('correct', 'incorrect');
+            if (isCorrect) {
+                feedbackEl.classList.add('correct');
+                feedbackEl.innerHTML = `<strong>Correct!</strong> ${q.explanation || ''}`;
+            } else {
+                feedbackEl.classList.add('incorrect');
+                feedbackEl.innerHTML = `<strong>Incorrect.</strong> The correct answer was option ${q.answerIndex + 1}. ${q.explanation || ''}`;
+            }
+            feedbackEl.style.display = 'block';
+
+            document.getElementById('quizCheckBtn').disabled = true;
+            document.getElementById('quizNextBtn').disabled = false;
+            
+            // Record submission
+            const session = loadData(STORAGE_KEYS.SESSION);
+            if (!QUIZ_STATE.currentAttempt) {
+                const submissions = getSubmissions();
+                submissions.push({
+                    id: Date.now(), quizId: q.id, paper: q.paper, studentEmail: session.email, correct: isCorrect, time: new Date().toISOString()
+                });
+                saveData(STORAGE_KEYS.SUBMISSIONS, submissions);
+                QUIZ_STATE.currentAttempt = true; // Mark as submitted
+                loadQuiz(q.paper, document.querySelector('#quizModuleTabs .active').dataset.module); // Update stats
             }
         }
+        
+        function nextQuestion() {
+            QUIZ_STATE.currentQuestionIndex = (QUIZ_STATE.currentQuestionIndex + 1) % QUIZ_STATE.currentQuiz.length;
+            displayQuestion(QUIZ_STATE.currentQuestionIndex);
+            document.getElementById('quizNextBtn').disabled = true;
+        }
+        
+        // --- ASSIGNMENTS LOGIC ---
+        function loadAssignments() {
+            const list = document.getElementById("assignmentList");
+            const assignments = getAssignments();
+            const submissions = getSubmissions();
+            const session = loadData(STORAGE_KEYS.SESSION, {});
+            const studentEmail = session.email;
 
-        loadMaterials();
+            list.innerHTML = "";
+            if (!assignments.length) {
+                list.innerHTML = "<p class='section-note'>No assignments have been posted yet.</p>";
+                return;
+            }
+
+            assignments.forEach((a) => {
+                const submitted = submissions.some(
+                    (s) => s.assignmentId === a.id && s.studentEmail === studentEmail
+                );
+                const buttonText = submitted ? "Submitted" : "Mark as Submitted";
+                const buttonClass = submitted ? 'secondary-btn-quiz' : 'primary-btn';
+                
+                list.innerHTML += `
+                    <div class="assignment-item">
+                        <h4>${a.title}</h4>
+                        <p class="meta">Due: ${a.dueDate || "N/A"}</p>
+                        <p>${a.description || 'No description provided.'}</p>
+                        <button data-assign="${a.id}" class="${buttonClass}" ${submitted ? 'disabled' : ''}>
+                            ${buttonText}
+                        </button>
+                    </div>
+                `;
+            });
+
+            list.querySelectorAll("button[data-assign]").forEach((btn) => {
+                if (!btn.disabled) {
+                    btn.addEventListener("click", () => {
+                        markAssignmentSubmitted(btn.dataset.assign);
+                        loadAssignments(); // re-render
+                    });
+                }
+            });
+        }
+
+        function markAssignmentSubmitted(assignmentId) {
+            const session = loadData(STORAGE_KEYS.SESSION);
+            if (!session) return;
+            const submissions = getSubmissions();
+            submissions.push({
+                id: Date.now(), assignmentId, studentEmail: session.email, time: new Date().toISOString()
+            });
+            saveData(STORAGE_KEYS.SUBMISSIONS, submissions);
+        }
+
+
+        // --- INIT BINDING ---
+        document.addEventListener('DOMContentLoaded', () => {
+            enforceAuthAndInit();
+
+            document.getElementById('quizCheckBtn').addEventListener('click', checkAnswer);
+            document.getElementById('quizNextBtn').addEventListener('click', nextQuestion);
+        });
+
     </script>
 </body>
 </html>
